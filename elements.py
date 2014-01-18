@@ -31,7 +31,6 @@ class Element(object):
 		self.state.update(dt)
 
 	def draw(self):
-		print self.x, self.y
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
