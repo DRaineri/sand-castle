@@ -17,8 +17,6 @@ class Grid(object):
 				bg = Sand(r_x, r_y)
 				self.grid[y][x] = Cell(bg)
 
-		
-
 	def draw_background(self):
 		for row in self.grid:
 			for cell in row:
@@ -26,29 +24,40 @@ class Grid(object):
 
 
 class Cell(object):
-	def __init__(self, x,y, background, element=None, foreground=None):
-		self.background =  pyglet.sprite.Sprite(random.choice(self.images), x, y)
+	def __init__(self, background, element=None):
+		self.background = background
 		self.element = element
-		self.foreground = foreground
 
 	def draw(self):
 		self.background.draw()
 		if self.element:
 			self.element.draw()
-		if self.foreground:
-			self.foreground.draw()
-		
 
-class Sand(Cell):
+class Background(object):
+	"""Class that generate a background object"""
+	
+	images = list()
 
-	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sand1', 'sand2', 'sand3']]
+	def __init__(self, x, y):
+		super(Background, self).__init__()
+
+		image_population = [image  for (image, weight) in self.images for i in xrange(weight)]
+		self.sprite = pyglet.sprite.Sprite(random.choice(image_population), x, y)
+	
+	def draw(self):
+		self.sprite.draw()
+
+class Sand(Background):
+
+	images = [(pyglet.image.load('images/background/sand{}.png'.format(i)), weight)
+	          for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Sand.images
 		super(Sand, self).__init__(*args, **kwargs)
 
 
-class Jungle(Cell):
+class Jungle(Background):
 
 	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['jungle1', 'jungle2', 'jungle3']]
 
@@ -56,14 +65,13 @@ class Jungle(Cell):
 		self.images = Jungle.images
 		super(Jungle, self).__init__(*args, **kwargs)
 
-class Sea(Cell):
+class Sea(Background):
 	
 	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sea1', 'sea2', 'sea3']]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Sea.images
 		super(Sea, self).__init__(*args, **kwargs)
-
 
 if __name__ == '__main__':
 
@@ -81,4 +89,3 @@ if __name__ == '__main__':
 			# jungleBack.draw()
 
 	pyglet.app.run()
-
