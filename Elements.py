@@ -1,3 +1,5 @@
+from state import Idle, Running
+
 class Element(object):
 	""" Main class of elements on board """
 	def __init__(self, posX, posY, sizeX, sizeY):
@@ -6,13 +8,18 @@ class Element(object):
 		self.size = (sizeX, sizeY)
 		self.state = Idle()
 
+	def update(self, dt):
+		self.state.update(dt)
+
+	def draw(self):
+		self.cur_image.draw()
 
 #SubClass
 class Creature(Element):
-	def __init__(self, lp):
+	def __init__(self, hp):
 		super(Creature, self).__init__()
-		this.lifePoint = lp
-		this.angle = 0;
+		this.hp = hp
+		this.angle = 0
 
 class StillObject(Element):
 	def __init__(self):
@@ -20,12 +27,16 @@ class StillObject(Element):
 
 #SubSubClass
 class Character(Creature):
+	images = {Idle: [], Moving: [Idle_character1.jpg,Idle_character2.jpg]}
+
 	def __init__(self, name):
 		super(Character, self).__init__()
 		self.name = name
 
+		self.images = Character.images
+
 class Castle(Creature):
-	def __init__(self):
+	def __init__(self):²
 		super(Castle,self).__init__()
 		
 class Monster(Creature):
@@ -36,3 +47,5 @@ class Chest(StillObject):
 	def __init__(self):
 		super(Chest,self).__init__()
 		# TODO : define what is in the chest
+
+		
