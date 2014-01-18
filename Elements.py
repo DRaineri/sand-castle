@@ -6,6 +6,8 @@ class Element(object):
 		self.size = (sizeX, sizeY)
 		self.state = Idle()
 
+	
+#SubClass
 class Creature(Element):
 	def __init__(self, lp):
 		super(Creature, self).__init__()
@@ -15,7 +17,8 @@ class Creature(Element):
 class StillObject(Element):
 	def __init__(self):
 		super(StillObject, self).__init__()
-		
+
+#SubSubClass
 class Character(Creature):
 	def __init__(self, name):
 		super(Character, self).__init__()
@@ -28,3 +31,5 @@ class Castle(Creature):
 class Monster(Creature):
 	def __init__(self, arg):
 		super(Monster, self).__init__()
+
+class Cheast 
