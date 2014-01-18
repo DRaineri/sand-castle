@@ -17,7 +17,7 @@ class GameWindow(pyglet.window.Window):
 		self.background_image = bg_color.create_image(self.width, self.height)
 		self.background = pyglet.sprite.Sprite(self.background_image)
 
-		self.grid = Grid(100, 60)
+		self.grid = Grid(20, 10)
 
 		# Title
 		t_x = self.width / 2
@@ -59,14 +59,19 @@ class GameWindow(pyglet.window.Window):
 	def on_key_press(self, symbol, modifiers):
 		x_diff = 0
 		y_diff = 0
+		diff = 40
 
 		if symbol == pyglet.window.key.UP:
+			self.character.y += diff
 			y_diff = 25
 		elif symbol == pyglet.window.key.DOWN:
+			self.character.y -= diff
 			y_diff = -25
 		elif symbol == pyglet.window.key.RIGHT:
+			self.character.x += diff
 			x_diff = 25
 		elif symbol == pyglet.window.key.LEFT:
+			self.character.x -= diff
 			x_diff = -25
 
 
