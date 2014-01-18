@@ -9,64 +9,60 @@ class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
 		self.random_populate()
-		self.w=w
-		self.h=h
-		#print self.h, self.w
+
+		self.w = w
+		self.h = h
+
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
 			for x, col in enumerate(row):
 				r_x, r_y = x * config.CELL_SIZE, y * config.CELL_SIZE
-				bg = Sand(r_x, r_y)
-				self.grid[y][x] = Cell(bg)
+				self.grid[y][x] =Sand(r_x, r_y)
 
 	def draw_background(self):
 		for row in self.grid:
 			for cell in row:
-				cell.draw()
+				cell.background.draw()
 
-	def close_elements_of_element(self, element):
-		close_elements = []
-		start_pos_x = element.x//config.CELL_SIZE - 1
-		start_pos_y = element.y//config.CELL_SIZE - 1
+	def draw_foreground(self):
+		for row in self.grid:
+			for cell in row:
+				cell.foreground.draw()
 
-		#bottom line
-		if start_pos_y >= 0:
-			for i in range (element.w + 1):
-				if start_pos_x >= 0 and self.grid[start_pos_y][start_pos_x + i].element:
-					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
+	def neighbours(self, element):
+		neigh = []
+		b_x = element.x // config.CELL_SIZE - 1
+		b_y = element.y // config.CELL_SIZE - 1
 
-		#top line
-		if start_pos_y >= 0:
-			for i in range (element.w + 1):
-				if self.grid[start_pos_y][start_pos_x + i].element:
-					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
+		for x in xrange(b_x, b_x + element.w + 1):
+			for y in xrange(b_y, b_y + element.h + 1):
+				if 0 <= x < self.w and 0 <= y < self.h and self.grid[y][x].element and self.grid[y][x].element != element:
+					neigh.append(self.grid[y][x].element)
+
+		return neigh
+
+	def update_elements(self, elements):
+		for element in elements:
+			for x, y in element.cells():
+				self.grid[y][x].element = element
+
 
 class Cell(object):
-	def __init__(self, background, element=None):
-		self.background = background
+	def __init__(self,x,y, element=None):
 		self.element = element
-
+		image_population = [image for (image, weight) in self.images for i in xrange(weight)]
+		self.background = pyglet.sprite.Sprite(random.choice(image_population), x, y)
+		self.foreground= None
+		
 	def draw(self):
 		self.background.draw()
 		if self.element:
 			self.element.draw()
+		if self.foreground:
+			self.foreground.draw()
 
-class Background(object):
-	"""Class that generate a background object"""
-	
-	images = list()
-
-	def __init__(self, x, y):
-		super(Background, self).__init__()
-
-		image_population = [image  for (image, weight) in self.images for i in xrange(weight)]
-		self.sprite = pyglet.sprite.Sprite(random.choice(image_population), x, y)
-	
-	def draw(self):
-		self.sprite.draw()
-
-class Sand(Background):
+class Sand(Cell):
 
 	images = [(pyglet.image.load('images/background/sand{}.png'.format(i)), weight)
 	          for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
@@ -76,7 +72,7 @@ class Sand(Background):
 		super(Sand, self).__init__(*args, **kwargs)
 
 
-class Jungle(Background):
+class Jungle(Cell):
 
 	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['jungle1', 'jungle2', 'jungle3']]
 
@@ -84,7 +80,7 @@ class Jungle(Background):
 		self.images = Jungle.images
 		super(Jungle, self).__init__(*args, **kwargs)
 
-class Sea(Background):
+class Sea(Cell):
 	
 	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sea1', 'sea2', 'sea3']]
 
