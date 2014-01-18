@@ -33,13 +33,13 @@ class GameWindow(pyglet.window.Window):
 		self.elements = []
 
 		self.character = Character('Main Character', 10, 0, 0)
+		self.elements.append(self.character)
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
 	def update(self, dt):
-		self.character.update(dt)
 
 		for element in self.elements:
 			element.update(dt)
@@ -49,8 +49,6 @@ class GameWindow(pyglet.window.Window):
 		self.grid.draw_background()
 		self.title.draw()
 
-		self.character.draw()
-
 		for element in self.elements:
 			element.draw()
 
@@ -58,7 +56,6 @@ class GameWindow(pyglet.window.Window):
 		c_x = self.character.x + self.character.w * config.CELL_SIZE / 2.0
 		c_y = self.character.y + self.character.h * config.CELL_SIZE / 2.0
 		self.character.angle = atan2(y - c_y, x - c_x)
-		print self.character.angle
 
 	def on_mouse_press(self, x, y, button, modifiers):
 		pass

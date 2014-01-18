@@ -10,7 +10,10 @@ class Element(object):
 		super(Element, self).__init__()
 		self.x, self.y = x, y
 		self.w, self.h = w, h
+
 		self.state = Idle(self)
+		self.last_state = Idle(self)
+		
 		self.cur_image = self.images[Idle][0][0]
 
 	def update(self, dt):
