@@ -3,7 +3,8 @@
 
 import pyglet
 from grid import Grid
-from elements import Character
+from elements import Character, Castle
+from pyglet.window import key
 
 import config
 from state import Moving, Idle, Attacking
@@ -15,13 +16,16 @@ class GameWindow(pyglet.window.Window):
 		super(GameWindow, self).__init__(*args, **kwargs)
 
 		self.width, self.height = args[:2]
+		
+		self.keys = key.KeyStateHandler()
+		self.push_handlers(self.keys)
 
 		# Background
 		bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 50, 255))
 		self.background_image = bg_color.create_image(self.width, self.height)
 		self.background = pyglet.sprite.Sprite(self.background_image)
 
-		self.grid = Grid(20, 10)
+		self.grid = Grid(25, 15)
 
 		# Title
 		t_x = self.width / 2
@@ -33,13 +37,16 @@ class GameWindow(pyglet.window.Window):
 		self.elements = []
 
 		self.character = Character('Main Character', 10, 0, 0)
+		self.elements.append(self.character)
+
+		self.castle= Castle('Main Castle',(self.grid.w/2)-2, (self.grid.h/2)+2, 4,4)
+		self.elements.append(self.castle)
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
 	def update(self, dt):
-		self.character.update(dt)
 
 		for element in self.elements:
 			element.update(dt)
@@ -49,16 +56,17 @@ class GameWindow(pyglet.window.Window):
 		self.grid.draw_background()
 		self.title.draw()
 
-		self.character.draw()
-
 		for element in self.elements:
 			element.draw()
 
-	def on_mouse_motion(self, x, y, dx, dy):
+	def on_mouse_motion(self, x, y, dx, dy): 
+		self.update_angle(x, y)
+
+	def update_angle(self, x, y):
 		c_x = self.character.x + self.character.w * config.CELL_SIZE / 2.0
 		c_y = self.character.y + self.character.h * config.CELL_SIZE / 2.0
 		self.character.angle = atan2(y - c_y, x - c_x)
-		print self.character.angle
+
 
 	def on_mouse_press(self, x, y, button, modifiers):
 		if button == pyglet.window.mouse.LEFT:
@@ -88,13 +96,21 @@ class GameWindow(pyglet.window.Window):
 			offset = radians(90)
 			self.character.state=Moving(self.character, offset)
 
+
 	def on_key_release(self, symbol, modifiers):
-		if symbol in {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT}:
+		
+		
+
+		movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
+		
+		if symbol in movement_keys and not any(self.keys[s] for s in movement_keys):
+
 			self.character.state = Idle(self.character)
 
 if __name__ == '__main__':
 	
 	g = GameWindow(1280, 800)
+	
 
 	# Running the app
 	pyglet.app.run()

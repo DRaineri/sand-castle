@@ -9,6 +9,9 @@ class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
 		self.random_populate()
+		self.w=w/config.CELL_SIZE
+		self.h=h/config.CELL_SIZE
+		print self.h, self.w
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
@@ -40,19 +43,17 @@ class Background(object):
 
 	def __init__(self, x, y):
 		super(Background, self).__init__()
-		self.sprite = pyglet.sprite.Sprite(random.choice(self.images), x, y)
+
+		image_population = [image  for (image, weight) in self.images for i in xrange(weight)]
+		self.sprite = pyglet.sprite.Sprite(random.choice(image_population), x, y)
 	
 	def draw(self):
 		self.sprite.draw()
 
 class Sand(Background):
-	image1 = pyglet.image.load('images/background/sand1.png')
-	image2 = pyglet.image.load('images/background/sand2.png')
-	image3 = pyglet.image.load('images/background/sand3.png')
-	image4 = pyglet.image.load('images/background/sand4.png')
-	image5 = pyglet.image.load('images/background/sand5.png')
 
-	images = [image1, image2, image3, image4, image5]
+	images = [(pyglet.image.load('images/background/sand{}.png'.format(i)), weight)
+	          for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Sand.images
@@ -60,27 +61,17 @@ class Sand(Background):
 
 
 class Jungle(Background):
-	image1 = pyglet.image.load('images/background/jungle1.png')
-	image2 = pyglet.image.load('images/background/jungle2.png')
-	image3 = pyglet.image.load('images/background/jungle3.png')
-	image4 = pyglet.image.load('images/background/jungle4.png')
-	image5 = pyglet.image.load('images/background/jungle5.png')
 
-	images = [image1, image2, image3, image4, image5]
+	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['jungle1', 'jungle2', 'jungle3']]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Jungle.images
 		super(Jungle, self).__init__(*args, **kwargs)
 
 class Sea(Background):
-	image1 = pyglet.image.load('images/background/sea1.png')
-	image2 = pyglet.image.load('images/background/sea2.png')
-	image3 = pyglet.image.load('images/background/sea3.png')
-	image4 = pyglet.image.load('images/background/sea4.png')
-	image5 = pyglet.image.load('images/background/sea5.png')
+	
+	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sea1', 'sea2', 'sea3']]
 
-	images = [image1, image2, image3, image4, image5]
- 
 	def __init__(self, *args, **kwargs):
 		self.images = Sea.images
 		super(Sea, self).__init__(*args, **kwargs)
@@ -101,4 +92,3 @@ if __name__ == '__main__':
 			# jungleBack.draw()
 
 	pyglet.app.run()
-
