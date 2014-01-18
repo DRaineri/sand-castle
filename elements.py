@@ -43,7 +43,8 @@ class Element(object):
 		cell_x = int(self.x // config.CELL_SIZE)
 		cell_y = int(self.y // config.CELL_SIZE)
 
-		return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)]
+		return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)
+		        if 0 <= cell_x + i < self.game.grid.w and 0 <= cell_y + j < self.game.grid.h ]
 #SubClass
 class Creature(Element):
 	def __init__(self, *args, **kwargs):
