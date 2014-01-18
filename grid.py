@@ -9,6 +9,9 @@ class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
 		self.random_populate()
+		self.w=w/config.CELL_SIZE
+		self.h=h/config.CELL_SIZE
+		print self.h, self.w
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
@@ -89,4 +92,3 @@ if __name__ == '__main__':
 			# jungleBack.draw()
 
 	pyglet.app.run()
-
