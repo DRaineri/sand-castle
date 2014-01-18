@@ -60,11 +60,11 @@ if __name__ == '__main__':
 	@window.event
 	def on_draw():
 			window.clear()
-			#sandBack = Sand(x=window.width//4, y=window.height//4)
+			sandBack = Sand(x=window.width//4, y=window.height//4)
 			# seaBack = Sea(x=window.width//4, y=window.height//4)
 			# jungleBack = Jungle(x=window.width//4, y=window.height//4)
 
-			# sandBack.draw()
+			sandBack.draw()
 			# seaBack.draw()
 			# jungleBack.draw()
 
