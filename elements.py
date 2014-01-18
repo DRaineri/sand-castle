@@ -5,6 +5,8 @@ import pyglet
 from state import Idle, Moving, Attacking
 import config
 
+from math import radians, atan2
+
 class Element(object):
 	""" Main class of elements on board """
 	def __init__(self, x, y, w=1, h=1):
@@ -30,8 +32,12 @@ class Element(object):
 	def update(self, dt):
 		self.state.update(dt)
 
+	def center(self):
+		self.center = (self.x + self.w*config.CELL_SIZE/2 , self.y + self.h*config.CELL_SIZE/2)
+		return self.center
+
 	def draw(self):
-		print self.x, self.y
+		#print self.x, self.y
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
@@ -45,9 +51,13 @@ class Element(object):
 		return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)]
 #SubClass
 class Creature(Element):
-	def __init__(self, hp=10, *args, **kwargs):
+		
+	hp = 100 
+
+	def __init__(self, *args, **kwargs):
+		self.hp = Creature.hp
 		super(Creature, self).__init__(*args, **kwargs)
-		self.hp = hp
+		
 		self.angle = 0.0
 		self.speed = 500
 
@@ -64,8 +74,8 @@ class Character(Creature):
 			],
 			Moving : [
 			[pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
+			],
 			
-			]	
 			 }
 
 	def __init__(self, name, *args, **kwargs):
@@ -109,18 +119,23 @@ class Monster(Creature):
 			[pyglet.image.load('images/monster/idle/0_right.png')]
 			],
 			Moving : [
-			[pyglet.image.load('images/monster/moving/{}_right.png'.format(f)) for f in range(4)] 
-			
+			[pyglet.image.load('images/monster/moving/{}_right.png'.format(f))] for f in range(4) 
+			],
+			Attacking : [
+			[pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
 			]
 			
 			 }
 
+	def setAngle(self,(c_x,c_y)):
+		sea_offset=atan2(c_y - self.y , c_x -self.x);
+		self.state=Moving(self,sea_offset)
+
 	def __init__(self, name, *args, **kwargs):
 		self.name = name
 		self.images = Monster.images
-
 		super(Monster, self).__init__(*args, **kwargs)
-
+		self.speed = 100
 
 class Chest(StillObject):
 	images = {

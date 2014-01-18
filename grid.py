@@ -11,7 +11,7 @@ class Grid(object):
 		self.random_populate()
 		self.w=w
 		self.h=h
-		print self.h, self.w
+		#print self.h, self.w
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
