@@ -25,22 +25,22 @@ class Grid(object):
 			for cell in row:
 				cell.draw()
 
-	def close_elements_of_element(self, element):
-		close_elements = []
-		start_pos_x = element.x//config.CELL_SIZE - 1
-		start_pos_y = element.y//config.CELL_SIZE - 1
+	def neighbours(self, element):
+		neigh = []
+		b_x = element.x // config.CELL_SIZE - 1
+		b_y = element.y // config.CELL_SIZE - 1
 
-		#bottom line
-		if start_pos_y >= 0:
-			for i in range (element.w + 1):
-				if start_pos_x >= 0 and self.grid[start_pos_y][start_pos_x + i].element:
-					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
+		for x in xrange(b_x, b_x + element.w + 1):
+			for y in xrange(b_y, b_y + element.h + 1):
+				if 0 <= x < self.w and 0 <= y < self.h and self.grid[y][x].element and self.grid[y][x].element != element:
+					neigh.append(self.grid[y][x].element)
 
-		#top line
-		if start_pos_y >= 0:
-			for i in range (element.w + 1):
-				if self.grid[start_pos_y][start_pos_x + i].element:
-					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
+		return neigh
+
+	def update_elements(self, elements):
+		for element in elements:
+			for x, y in element.cells():
+				self.grid[y][x].element = element
 
 class Cell(object):
 	def __init__(self, background, element=None):

@@ -38,8 +38,7 @@ class GameWindow(pyglet.window.Window):
 
 		self.character = Character('Main Character', 10, 0, 0)
 		self.elements.append(self.character)
-		print (self.width)/2
-		print (self.height)/2
+
 		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
 		self.elements.append(self.castle)
 
@@ -48,9 +47,11 @@ class GameWindow(pyglet.window.Window):
 
 
 	def update(self, dt):
-
 		for element in self.elements:
 			element.update(dt)
+
+		# Updating the element in grids
+		self.grid.update_elements(self.elements)
 
 	def on_draw(self):
 		self.background.draw()

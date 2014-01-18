@@ -39,8 +39,8 @@ class Element(object):
 		pass
 
 	def cells(self):
-		cell_x = self.x//config.CELL_SIZE
-		cell_y = self.y//config.CELL_SIZE
+		cell_x = int(self.x // config.CELL_SIZE)
+		cell_y = int(self.y // config.CELL_SIZE)
 
 		return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)]
 #SubClass
