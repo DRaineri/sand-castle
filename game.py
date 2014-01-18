@@ -38,17 +38,12 @@ class GameWindow(pyglet.window.Window):
 		# Graphical objects
 		self.elements = []
 
-		self.character = Character(self, 'Main Character', 10, 0, 0)
-		self.monster = Monster('Sharkinou',50, 0, 0)
-		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
+		self.character = Character(self, 0, 0)
+		self.monster = Monster(self, 300, 300)
+		self.castle= Castle(self, (self.width) / 2 - (1.5*config.CELL_SIZE), (self.height) / 2, 3, 3)
 
 		self.elements.append(self.monster)
 		self.elements.append(self.character)
-<<<<<<< HEAD
-
-		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
-=======
->>>>>>> 7021405de0aab43e97840ac71bc9a97843747de0
 		self.elements.append(self.castle)
 
 		# Setting an update frequency of 60hz

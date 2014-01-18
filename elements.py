@@ -7,10 +7,12 @@ import config
 
 class Element(object):
 	""" Main class of elements on board """
-	def __init__(self, x, y, w=1, h=1):
+	def __init__(self, game, x, y, w=1, h=1):
 		super(Element, self).__init__()
 		self.x, self.y = x, y
 		self.w, self.h = w, h
+
+		self.game = game
 		
 		self._state = Idle(self)
 
@@ -44,9 +46,11 @@ class Element(object):
 		return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)]
 #SubClass
 class Creature(Element):
-	def __init__(self, hp=10, *args, **kwargs):
+	def __init__(self, *args, **kwargs):
 		super(Creature, self).__init__(*args, **kwargs)
-		self.hp = hp
+
+		self.hp = 10
+
 		self.angle = 0.0
 		self.speed = 500
 
@@ -67,9 +71,8 @@ class Character(Creature):
 			]	
 			 }
 
-	def __init__(self, game, name, *args, **kwargs):
-		self.game = game
-		self.name = name
+	def __init__(self, *args, **kwargs):
+		self.hp = 20
 		self.images = Character.images
 
 		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
@@ -100,8 +103,12 @@ class Castle(Creature):
 			]
 			 }
 	def __init__(self, *args, **kwargs):
-			super(Castle,self).__init__(*args, **kwargs)
+		self.images = Castle.images
+		self.hp = 100
+		super(Castle, self).__init__(*args, **kwargs)
 		
+
+
 class Monster(Creature):
 	images = {
 
@@ -115,9 +122,9 @@ class Monster(Creature):
 			
 			 }
 
-	def __init__(self, name, *args, **kwargs):
-		self.name = name
+	def __init__(self, *args, **kwargs):
 		self.images = Monster.images
+		self.hp = 30
 
 		super(Monster, self).__init__(*args, **kwargs)
 
