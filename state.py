@@ -25,7 +25,6 @@ class Idle(State):
 	"""docstring for Idle"""
 	def __init__(self, element):
 		super(Idle, self).__init__(element)
-		print self.element.images[Idle]
 		self.images = self.element.images[Idle]
 
 
@@ -45,7 +44,6 @@ class Moving(State):
 
 		angle = self.element.angle + self.offset
 		distancePix = self.element.speed * dt
-		print distancePix
 		self.element.x += distancePix * cos(angle)
 		self.element.y += distancePix * sin(angle)
 
