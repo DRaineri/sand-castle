@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from math import cos, sin, ceil, pi
 
 class State(object):
@@ -44,8 +47,19 @@ class Moving(State):
 
 		angle = self.element.angle + self.offset
 		distancePix = self.element.speed * dt
+
+		l_x = self.element.x
+		l_y = self.element.y
+
 		self.element.x += distancePix * cos(angle)
 		self.element.y += distancePix * sin(angle)
+
+		# Checking if we got inside occupied cells
+		game = self.element.game
+		if any(game.grid.grid[y][x].element for x, y in self.element.cells()
+			   if game.grid.grid[y][x].element and game.grid.grid[y][x].element != self.element):
+			self.element.x, self.element.y = l_x, l_y
+			self.element.collision()
 
 	#def interact():
 	#	print "interact"

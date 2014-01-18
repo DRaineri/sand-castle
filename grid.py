@@ -9,9 +9,10 @@ class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
 		self.random_populate()
-		self.w=w
-		self.h=h
-		print self.h, self.w
+
+		self.w = w
+		self.h = h
+
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
@@ -24,27 +25,31 @@ class Grid(object):
 			for cell in row:
 				cell.background.draw()
 
-	def close_elements_of_element(self, element):
-		close_elements = []
-		start_pos_x = element.x//config.CELL_SIZE - 1
-		start_pos_y = element.y//config.CELL_SIZE - 1
-
-		#bottom line
-		if start_pos_y >= 0:
-			for i in range (element.w + 1):
-				if start_pos_x >= 0 and self.grid[start_pos_y][start_pos_x + i].element:
-					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
-
-		#top line
-		if start_pos_y >= 0:
-			for i in range (element.w + 1):
-				if self.grid[start_pos_y][start_pos_x + i].element:
-					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
-
 	def draw_foreground(self):
 		for row in self.grid:
 			for cell in row:
 				cell.foreground.draw()
+
+	def neighbours(self, element):
+		neigh = []
+		b_x = int(element.x // config.CELL_SIZE - 1)
+		b_y = int(element.y // config.CELL_SIZE - 1)
+
+		for x in xrange(b_x, b_x + element.w + 1):
+			for y in xrange(b_y, b_y + element.h + 1):
+				if 0 <= x < self.w and 0 <= y < self.h and self.grid[y][x].element and self.grid[y][x].element != element:
+					neigh.append(self.grid[y][x].element)
+
+		return neigh
+
+	def update_elements(self, elements):
+		for row in self.grid:
+			for cell in row:
+				cell.element = None
+
+		for element in elements:
+			for x, y in element.cells():
+				self.grid[y][x].element = element
 
 
 class Cell(object):
@@ -54,12 +59,12 @@ class Cell(object):
 		self.background = pyglet.sprite.Sprite(random.choice(image_population), x, y)
 		self.foreground= None
 		
-	# def draw(self):
-	# 	self.background.draw()
-	# 	if self.element:
-	# 		self.element.draw()
-	# 	if self.foreground:
-	# 		self.foreground.draw()
+	def draw(self):
+		self.background.draw()
+		if self.element:
+			self.element.draw()
+		if self.foreground:
+			self.foreground.draw()
 
 class Sand(Cell):
 
