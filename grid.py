@@ -46,11 +46,11 @@ class Background(object):
 		self.sprite.draw()
 
 class Sand(Background):
-	image1 = pyglet.image.load('Images/Background/sand1.png')
-	image2 = pyglet.image.load('Images/Background/sand2.png')
-	image3 = pyglet.image.load('Images/Background/sand3.png')
-	image4 = pyglet.image.load('Images/Background/sand4.png')
-	image5 = pyglet.image.load('Images/Background/sand5.png')
+	image1 = pyglet.image.load('images/background/sand1.png')
+	image2 = pyglet.image.load('images/background/sand2.png')
+	image3 = pyglet.image.load('images/background/sand3.png')
+	image4 = pyglet.image.load('images/background/sand4.png')
+	image5 = pyglet.image.load('images/background/sand5.png')
 
 	images = [image1, image2, image3, image4, image5]
 
@@ -60,11 +60,11 @@ class Sand(Background):
 
 
 class Jungle(Background):
-	image1 = pyglet.image.load('Images/Background/jungle1.png')
-	image2 = pyglet.image.load('Images/Background/jungle2.png')
-	image3 = pyglet.image.load('Images/Background/jungle3.png')
-	image4 = pyglet.image.load('Images/Background/jungle4.png')
-	image5 = pyglet.image.load('Images/Background/jungle5.png')
+	image1 = pyglet.image.load('images/background/jungle1.png')
+	image2 = pyglet.image.load('images/background/jungle2.png')
+	image3 = pyglet.image.load('images/background/jungle3.png')
+	image4 = pyglet.image.load('images/background/jungle4.png')
+	image5 = pyglet.image.load('images/background/jungle5.png')
 
 	images = [image1, image2, image3, image4, image5]
 
@@ -73,11 +73,11 @@ class Jungle(Background):
 		super(Jungle, self).__init__(*args, **kwargs)
 
 class Sea(Background):
-	image1 = pyglet.image.load('Images/Background/sea1.png')
-	image2 = pyglet.image.load('Images/Background/sea2.png')
-	image3 = pyglet.image.load('Images/Background/sea3.png')
-	image4 = pyglet.image.load('Images/Background/sea4.png')
-	image5 = pyglet.image.load('Images/Background/sea5.png')
+	image1 = pyglet.image.load('images/background/sea1.png')
+	image2 = pyglet.image.load('images/background/sea2.png')
+	image3 = pyglet.image.load('images/background/sea3.png')
+	image4 = pyglet.image.load('images/background/sea4.png')
+	image5 = pyglet.image.load('images/background/sea5.png')
 
 	images = [image1, image2, image3, image4, image5]
  
