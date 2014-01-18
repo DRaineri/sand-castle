@@ -6,7 +6,7 @@ from grid import Grid
 from elements import Character
 
 import config
-from state import Moving, Idle
+from state import Moving, Idle, Attacking
 from math import radians, atan2
 
 class GameWindow(pyglet.window.Window):
@@ -61,6 +61,13 @@ class GameWindow(pyglet.window.Window):
 		print self.character.angle
 
 	def on_mouse_press(self, x, y, button, modifiers):
+		if button == pyglet.window.mouse.LEFT:
+			self.character.attack()
+		elif button == pyglet.window.mouse.RIGHT:
+			pass
+			#wait release
+
+	def on_mouse_release(self, x, y, button, modifiers):
 		pass
 
 	def on_key_press(self, symbol, modifiers):
