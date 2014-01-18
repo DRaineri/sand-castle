@@ -4,6 +4,8 @@
 import pyglet
 from grid import Grid
 from elements import Character
+from math import atan2
+import config
 
 class GameWindow(pyglet.window.Window):
 
@@ -51,7 +53,9 @@ class GameWindow(pyglet.window.Window):
 			element.draw()
 
 	def on_mouse_motion(self, x, y, dx, dy):
-		pass
+		c_x = self.character.x + self.character.w * config.CELL_SIZE / 2.0
+		c_y = self.character.y + self.character.h * config.CELL_SIZE / 2.0
+		self.character.angle = atan2(y - c_y, x - c_x)
 
 	def on_mouse_press(self, x, y, button, modifiers):
 		pass
@@ -74,7 +78,9 @@ class GameWindow(pyglet.window.Window):
 			self.character.x -= diff
 			x_diff = -25
 
-
+	def on_key_release(self, symbol, modifiers):
+		if symbol in {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT}:
+			pass#self.character.state = Idle()
 
 if __name__ == '__main__':
 	
