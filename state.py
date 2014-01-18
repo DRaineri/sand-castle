@@ -2,18 +2,32 @@ from math import cos, sin, ceil, pi
 
 class State(object):
 	"""docstring for State"""
-	def __init__(self, element):
+	anim_delay = 0.1
+
+	def __init__(self, element, anim_delay=anim_delay):
 		self.t = 0
 		self.element = element	
+		self.anim_delay = anim_delay
 
 	def update(self, dt):
 		self.t += dt
-	
+
+		frame_id = int(self.t / self.anim_delay) % len(self.images)
+
+		imagesFrame = self.images[frame_id]
+
+		pos_angle = (self.element.angle + pi / 4 + 2 * pi) % (2 * pi)
+		angle_fragment = int(len(imagesFrame) * (pos_angle / (2 * pi))) 
+
+		self.element.cur_image = imagesFrame[angle_fragment]	
 
 class Idle(State):
 	"""docstring for Idle"""
 	def __init__(self, element):
 		super(Idle, self).__init__(element)
+		print self.element.images[Idle]
+		self.images = self.element.images[Idle]
+
 
 	def update(self, dt):
 		super(Idle, self).update(dt)
@@ -21,27 +35,19 @@ class Idle(State):
 class Moving(State):
 	"""docstring for Moving"""
 
-	anim_delay = 0.2
-	def __init__(self, element, offset, anim_delay=anim_delay):
+	def __init__(self, element, offset):
 		super(Moving, self).__init__(element)
-		self.anim_delay = anim_delay
-		self.element.offset=offset	
-
+		self.offset = offset	
+		self.images = self.element.images[Moving]
 
 	def update(self, dt):
 		super(Moving,self).update(dt)
 
-		angle = self.element.angle+self.element.offset
+		angle = self.element.angle + self.offset
 		distancePix = self.element.speed * dt
+		print distancePix
 		self.element.x += distancePix * cos(angle)
 		self.element.y += distancePix * sin(angle)
-
-		if self.t > self.anim_delay:	
-			imagesMoving = self.element.images[Idle]
-			imagesFrame = imagesMoving[(int(self.t / self.anim_delay)) % len(self.element.images)]
-			self.element.cur_image=imagesFrame[int(ceil(angle/(2*pi)*len(imagesFrame)))]	
-
-			self.t = 0
 
 	def interact():
 		print "interact"

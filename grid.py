@@ -14,7 +14,7 @@ class Grid(object):
 		for y, row in enumerate(self.grid):
 			for x, col in enumerate(row):
 				r_x, r_y = x * config.CELL_SIZE, y * config.CELL_SIZE
-				bg = random_bg()(r_x, r_y)
+				bg = Sand(r_x, r_y)
 				self.grid[y][x] = Cell(bg)
 
 	def draw_background(self):
