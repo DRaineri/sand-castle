@@ -41,7 +41,10 @@ class Character(Creature):
 			Idle: [
 			[pyglet.image.load('images/char_idle_{}.png'.format(pos)) for pos in ['front', 'right', 'back', 'left']]
 			]
-							
+			Moving : [
+			[pyglet.image.load('images/char_moving_{}_{}'.format(f,p)) for f in range(4) for p in ['front', 'right', 'back', 'left']]
+			
+			]	
 			 }
 
 	def __init__(self, name, *args, **kwargs):
@@ -52,6 +55,7 @@ class Character(Creature):
 		super(Character, self).__init__(*args, **kwargs)
 
 class Castle(Creature):
+
 	def __init__(self):
 		super(Castle,self).__init__()
 		
