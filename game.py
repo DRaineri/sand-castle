@@ -3,6 +3,7 @@
 
 import pyglet
 from grid import Grid
+from elements import Character
 
 class GameWindow(pyglet.window.Window):
 
@@ -27,12 +28,15 @@ class GameWindow(pyglet.window.Window):
 		# Graphical objects
 		self.elements = []
 
+		self.character = Character('Main Character', 10, 0, 0)
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
 	def update(self, dt):
+		self.character.update(dt)
+
 		for element in self.elements:
 			element.update(dt)
 
@@ -41,6 +45,7 @@ class GameWindow(pyglet.window.Window):
 		self.grid.draw_background()
 		self.title.draw()
 
+		self.character.draw()
 
 		for element in self.elements:
 			element.draw()

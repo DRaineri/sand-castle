@@ -1,4 +1,4 @@
-import math
+from math import cos, sin
 
 class State(object):
 	"""docstring for State"""
@@ -8,17 +8,15 @@ class State(object):
 
 	def update(self, dt):
 		self.t += dt
-
 	
 
 class Idle(State):
 	"""docstring for Idle"""
-	def __init__(self, arg):
-		super(Idle, self).__init__()
-		self.arg = arg
+	def __init__(self, element):
+		super(Idle, self).__init__(element)
 
 	def update(self, dt):
-		self.time_passed += dt
+		self.t += dt
 
 class Moving(State):
 	"""docstring for Moving"""
@@ -31,19 +29,19 @@ class Moving(State):
 
 	def update(self, dt):
 		super(Moving,self).update(dt)
-		self.time_passed += dt
+		self.t += dt
 
 		angle = self.element
-		distancePix = self.element.speed*dt
-		self.element.pos.posX = distancePix*cos(angle)
-		self.element.pos.posY = distancePix*sin(angle)
+		distancePix = self.element.speed * dt
+		self.element.x = distancePix * cos(angle)
+		self.element.y = distancePix * sin(angle)
 
-		if (self.time_passed > self.anim_delay):	
+		if self.t > self.anim_delay:	
 			imagesMoving = self.element.images[Moving]
 			imagesFrame = imagesMoving[(self.t / self.anim_delay) % len(self.element.images)]
 			self.element.cur_image=imagesFrame[ceil(angle/(2*PI)*len(imagesFrame))]	
 
-			self.time_passed = 0
+			self.t = 0
 
 
 
