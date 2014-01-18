@@ -57,7 +57,7 @@ class Background(object):
 	
 	images = list()
 
-	def __init__(self, x, y):
+²	def __init__(self, x, y):
 		super(Background, self).__init__()
 
 		image_population = [image  for (image, weight) in self.images for i in xrange(weight)]
