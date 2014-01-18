@@ -9,6 +9,9 @@ class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
 		self.random_populate()
+		self.w=w
+		self.h=h
+		print self.h, self.w
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
@@ -22,6 +25,22 @@ class Grid(object):
 			for cell in row:
 				cell.draw()
 
+	def close_elements_of_element(self, element):
+		close_elements = []
+		start_pos_x = element.x//config.CELL_SIZE - 1
+		start_pos_y = element.y//config.CELL_SIZE - 1
+
+		#bottom line
+		if start_pos_y >= 0:
+			for i in range (element.w + 1):
+				if start_pos_x >= 0 and self.grid[start_pos_y][start_pos_x + i].element:
+					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
+
+		#top line
+		if start_pos_y >= 0:
+			for i in range (element.w + 1):
+				if self.grid[start_pos_y][start_pos_x + i].element:
+					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
 
 class Cell(object):
 	def __init__(self, background, element=None):
@@ -89,4 +108,3 @@ if __name__ == '__main__':
 			# jungleBack.draw()
 
 	pyglet.app.run()
-

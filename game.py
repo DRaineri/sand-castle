@@ -3,12 +3,13 @@
 
 import pyglet
 from grid import Grid
-from elements import Character
-from elements import Monster
+
+from elements import Character, Monster, Castle
+
 from pyglet.window import key
 
 import config
-from state import Moving, Idle
+from state import Moving, Idle, Attacking
 from math import radians, atan2
 
 class GameWindow(pyglet.window.Window):
@@ -41,6 +42,10 @@ class GameWindow(pyglet.window.Window):
 		self.monster = Monster('Sharkinou',50, 0, 0)
 		self.elements.append(self.monster)
 		self.elements.append(self.character)
+		print (self.width)/2
+		print (self.height)/2
+		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
+		self.elements.append(self.castle)
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
@@ -69,6 +74,13 @@ class GameWindow(pyglet.window.Window):
 
 
 	def on_mouse_press(self, x, y, button, modifiers):
+		if button == pyglet.window.mouse.LEFT:
+			self.character.attack()
+		elif button == pyglet.window.mouse.RIGHT:
+			pass
+			#wait release
+
+	def on_mouse_release(self, x, y, button, modifiers):
 		pass
 
 	def on_key_press(self, symbol, modifiers):
