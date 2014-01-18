@@ -30,7 +30,9 @@ class GameWindow(pyglet.window.Window):
 
 
 	def update(self, dt):
-		pass
+		for element in self.elements:
+			element.update(dt)
+
 
 	def on_draw(self):
 		self.background.draw()
@@ -42,8 +44,8 @@ class GameWindow(pyglet.window.Window):
 	def on_mouse_motion(self, x, y, dx, dy):
 		pass
 
-	def on_mouse_press(self, x, y):
-		print x, y
+	def on_mouse_press(self, x, y, button, modifiers):
+		pass
 
 	def on_key_press(self, symbol, modifiers):
 		x_diff = 0
