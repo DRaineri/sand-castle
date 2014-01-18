@@ -43,6 +43,10 @@ class Grid(object):
 		return neigh
 
 	def update_elements(self, elements):
+		for row in self.grid:
+			for cell in row:
+				cell.element = None
+
 		for element in elements:
 			for x, y in element.cells():
 				self.grid[y][x].element = element
