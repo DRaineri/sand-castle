@@ -56,8 +56,8 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, arg):
-		super(Attacking, self).__init__()
+	def __init__(self, element):
+		super(Attacking, self).__init__(element)
 		self.images = self.element.images[Attacking]
 
 	def update(self, dt):
