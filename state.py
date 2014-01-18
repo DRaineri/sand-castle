@@ -14,12 +14,12 @@ class State(object):
 
 		frame_id = int(self.t / self.anim_delay) % len(self.images)
 
-		imagesFrame = self.images[frame_id]
+		images_frame = self.images[frame_id]
 
 		pos_angle = (self.element.angle + pi / 4 + 2 * pi) % (2 * pi)
-		angle_fragment = int(len(imagesFrame) * (pos_angle / (2 * pi))) 
+		angle_fragment = int(len(images_frame) * (pos_angle / (2 * pi))) 
 
-		self.element.cur_image = imagesFrame[angle_fragment]	
+		self.element.cur_image = images_frame[angle_fragment]	
 
 class Idle(State):
 	"""docstring for Idle"""
@@ -44,10 +44,10 @@ class Moving(State):
 		super(Moving,self).update(dt)
 
 		angle = self.element.angle + self.offset
-		distancePix = self.element.speed * dt
-		print distancePix
-		self.element.x += distancePix * cos(angle)
-		self.element.y += distancePix * sin(angle)
+		distance_pix = self.element.speed * dt
+		print distance_pix
+		self.element.x += distance_pix * cos(angle)
+		self.element.y += distance_pix * sin(angle)
 
 	#def interact():
 	#	print "interact"

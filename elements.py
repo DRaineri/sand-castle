@@ -55,7 +55,12 @@ class Character(Creature):
 		super(Character, self).__init__(*args, **kwargs)
 
 class Castle(Creature):
+		images = {
 
+			Idle: [
+			[pyglet.image.load('images/castle/idle/0_{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
+			]
+			 }
 	def __init__(self):
 		super(Castle,self).__init__()
 		
