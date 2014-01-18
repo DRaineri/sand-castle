@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from math import cos, sin, ceil, pi
-
+import elements
 class State(object):
 	"""docstring for State"""
 	anim_delay = 0.1
@@ -70,10 +70,18 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element):
+	def __init__(self, element,target):
 		super(Attacking, self).__init__(element)
 		self.images = self.element.images[Attacking]
+		self.target = target
+
+
 
 	def update(self, dt):
 		super(Attacking,self).update(dt)
+		neighbours = self.element.game.grid.neighbours(self.element)
+
+		for n in neighbours:
+			if not isinstance(n, Castle) and not isinstance(n, Character):
+				self.element.state = Moving(self,n)
 

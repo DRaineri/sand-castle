@@ -153,7 +153,7 @@ class Monster(Creature):
 
 		for n in neighbours:
 			if isinstance(n, Castle) or isinstance(n, Character):
-				self.state = Attacking(self)
+				self.state = Attacking(self,n)
 				return
 
 class Chest(StillObject):
