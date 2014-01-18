@@ -40,7 +40,7 @@ class GameWindow(pyglet.window.Window):
 		self.elements = []
 
 		self.character = Character(self, 10, 0)
-		self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
+		self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,3)
 		
 		
 		self.elements.append(self.character)
