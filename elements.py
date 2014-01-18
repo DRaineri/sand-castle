@@ -164,9 +164,7 @@ class Chest(StillObject):
 			]
 
 			 }
-	def __init__(self, item, *args, **kwargs):
-		self.item = item
-
+	def __init__(self, *args, **kwargs):
 		self.images = Chest.images
 		super(Chest, self).__init__(*args, **kwargs)
 	
