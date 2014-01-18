@@ -113,7 +113,8 @@ class GameWindow(pyglet.window.Window):
 if __name__ == '__main__':
 	
 	g = GameWindow(1280, 800)
-	
+	music = pyglet.resource.media('test.mp3')
+	music.play()
 
 	# Running the app
 	pyglet.app.run()
