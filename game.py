@@ -9,6 +9,7 @@ from elements import Character, Monster, Castle
 from pyglet.window import key
 
 import config
+import random
 from state import Moving, Idle, Attacking
 from math import radians, atan2
 
@@ -38,21 +39,35 @@ class GameWindow(pyglet.window.Window):
 		# Graphical objects
 		self.elements = []
 
-		self.character = Character(self, 0, 0)
-		self.monster = Monster(self, 300, 300)
-		self.castle= Castle(self, (self.width) / 2 - (1.5*config.CELL_SIZE), (self.height) / 2, 3, 3)
-
-		self.elements.append(self.monster)
+		self.character = Character(self, 10, 0)
+		self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
+		
+		
 		self.elements.append(self.character)
+		self.addSeaMonster()
+		self.addSeaMonster()
+		
+			
+
+
 		self.elements.append(self.castle)
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
+	def addSeaMonster(self):
+		monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
+
+		self.elements.append(monster)
+		monster.setAngle()
+
 	def update(self, dt):
 		for element in self.elements:
 			element.update(dt)
+
+
+
 
 		# Updating the element in grids
 		self.grid.update_elements(self.elements)
