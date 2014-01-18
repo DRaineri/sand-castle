@@ -14,6 +14,7 @@ class Element(object):
 		self.cur_image = self.images[Idle][0][0]
 
 	def update(self, dt):
+		print dt
 		self.state.update(dt)
 
 	def draw(self):
@@ -25,7 +26,8 @@ class Creature(Element):
 	def __init__(self, hp=10, *args, **kwargs):
 		super(Creature, self).__init__(*args, **kwargs)
 		self.hp = hp
-		self.angle = 0
+		self.angle = 0.0
+		self.speed=50
 
 class StillObject(Element):
 	def __init__(self, *args, **kwargs):
