@@ -24,6 +24,22 @@ class Grid(object):
 			for cell in row:
 				cell.background.draw()
 
+	def close_elements_of_element(self, element):
+		close_elements = []
+		start_pos_x = element.x//config.CELL_SIZE - 1
+		start_pos_y = element.y//config.CELL_SIZE - 1
+
+		#bottom line
+		if start_pos_y >= 0:
+			for i in range (element.w + 1):
+				if start_pos_x >= 0 and self.grid[start_pos_y][start_pos_x + i].element:
+					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
+
+		#top line
+		if start_pos_y >= 0:
+			for i in range (element.w + 1):
+				if self.grid[start_pos_y][start_pos_x + i].element:
+					close_elements.append(self.grid[start_pos_y][start_pos_x + i].element)
 
 	def draw_foreground(self):
 		for row in self.grid:
