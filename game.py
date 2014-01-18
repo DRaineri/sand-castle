@@ -36,8 +36,11 @@ class GameWindow(pyglet.window.Window):
 		# Graphical objects
 		self.elements = []
 
-		self.character = Character('Main Character', 10, 0, 0)
+		self.character = Character(self, 'Main Character', 10, 0, 0)
 		self.elements.append(self.character)
+
+		self.ruby = 0
+		self.shark_leather = 0
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
