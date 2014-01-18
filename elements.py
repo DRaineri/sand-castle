@@ -14,7 +14,6 @@ class Element(object):
 		self.cur_image = self.images[Idle][0][0]
 
 	def update(self, dt):
-		print dt
 		self.state.update(dt)
 
 	def draw(self):
@@ -30,7 +29,7 @@ class Creature(Element):
 		super(Creature, self).__init__(*args, **kwargs)
 		self.hp = hp
 		self.angle = 0.0
-		self.speed=50
+		self.speed = 500
 
 class StillObject(Element):
 	def __init__(self, *args, **kwargs):
@@ -53,7 +52,6 @@ class Character(Creature):
 		self.name = name
 		self.images = Character.images
 
-		print args, kwargs
 		super(Character, self).__init__(*args, **kwargs)
 
 class Castle(Creature):
@@ -77,7 +75,6 @@ class Chest(StillObject):
 		self.name = name
 		self.images = Chest.images
 
-		print args, kwargs
 		super(Chest, self).__init__(*args, **kwargs)
 		# TODO : define what is in the chest
 
