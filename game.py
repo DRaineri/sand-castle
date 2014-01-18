@@ -40,7 +40,7 @@ class GameWindow(pyglet.window.Window):
 		self.elements = []
 
 		self.character = Character(self, 10, 0)
-		self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,3)
+		self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
 		
 		
 		self.elements.append(self.character)
@@ -66,9 +66,6 @@ class GameWindow(pyglet.window.Window):
 	def update(self, dt):
 		for element in self.elements:
 			element.update(dt)
-
-
-
 
 		# Updating the element in grids
 		self.grid.update_elements(self.elements)
@@ -116,15 +113,16 @@ class GameWindow(pyglet.window.Window):
 		offset = 0
 
 		if symbol == pyglet.window.key.UP:
+			offset= radians(90)
 			self.character.state=Moving(self.character, offset)
 		elif symbol == pyglet.window.key.DOWN:
-			offset = radians(180)
-			self.character.state=Moving(self.character, offset)
-		elif symbol == pyglet.window.key.RIGHT:
 			offset = radians(-90)
 			self.character.state=Moving(self.character, offset)
+		elif symbol == pyglet.window.key.RIGHT:
+			offset = radians(0)
+			self.character.state=Moving(self.character, offset)
 		elif symbol == pyglet.window.key.LEFT:
-			offset = radians(90)
+			offset = radians(180)
 			self.character.state=Moving(self.character, offset)
 
 

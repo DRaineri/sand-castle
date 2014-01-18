@@ -45,7 +45,7 @@ class Moving(State):
 	def update(self, dt):
 		super(Moving,self).update(dt)
 
-		angle = self.element.angle + self.offset
+		angle = self.offset
 		distancePix = self.element.speed * dt
 
 		l_x = self.element.x
