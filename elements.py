@@ -133,12 +133,12 @@ class Monster(Creature):
 			 }
 
 
-	def setAngle(self,(c_x,c_y)):
-		sea_offset=atan2(c_y - self.y , c_x -self.x);
-		self.state=Moving(self,sea_offset)
+	def setAngle(self):
+		c_x, c_y = self.game.castle.x, self.game.castle.y
+		self.angle = atan2(c_y - self.y , c_x -self.x)
+		self.state = Moving(self, 0)
 
-	def __init__(self, name, *args, **kwargs):
-		self.name = name
+	def __init__(self, *args, **kwargs):
 		self.images = Monster.images
 		self.hp = 30
 

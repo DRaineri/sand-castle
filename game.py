@@ -39,13 +39,13 @@ class GameWindow(pyglet.window.Window):
 		# Graphical objects
 		self.elements = []
 
-		self.character = Character('Main Character', 10, 0)
+		self.character = Character(self, 10, 0)
+		self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
 		
 		
 		self.elements.append(self.character)
-		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
-		self.addSeaMonster('Coquinou')
-		self.addSeaMonster('Sharkinou')
+		self.addSeaMonster()
+		self.addSeaMonster()
 		
 			
 
@@ -56,11 +56,11 @@ class GameWindow(pyglet.window.Window):
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
-	def addSeaMonster(self,name):
-		monster = Monster(self, 0, random.randint(0,self.height),1,1)
+	def addSeaMonster(self):
+		monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
 
 		self.elements.append(monster)
-		monster.setAngle(monster,self.castle.center())
+		monster.setAngle()
 
 	def update(self, dt):
 		for element in self.elements:
