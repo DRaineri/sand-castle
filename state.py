@@ -49,32 +49,19 @@ class Moving(State):
 		self.element.x += distancePix * cos(angle)
 		self.element.y += distancePix * sin(angle)
 
-	def interact():
-		print "interact"
+	#def interact():
+	#	print "interact"
 
 
 
 	
 
-#class Attacking(State):
-#	"""docstring for Attacking"""
-#	def __init__(self, arg):
-#		super(Attacking, self).__init__()
-#		self.arg = arg
-#
-#	def update(self, dt):
-#		super(Attacking,self).update(dt)
-#
-#		angle = self.element.angle+offset
-#		distancePix = self.element.speed * dt
-#		self.element.x += distancePix * cos(angle)
-#		self.element.y += distancePix * sin(angle)
-#
-#		if self.t > self.anim_delay:	
-#			imagesMoving = self.element.images[Attack]
-#			imagesFrame = imagesMoving[(int(self.t / self.anim_delay)) % len(self.element.images)]
-#			self.element.cur_image=imagesFrame[int(ceil(angle/(2*pi)*len(imagesFrame)))]	
-#
-#			self.t = 0
-#
-#
+class Attacking(State):
+	"""docstring for Attacking"""
+	def __init__(self, arg):
+		super(Attacking, self).__init__()
+		self.images = self.element.images[Attacking]
+
+	def update(self, dt):
+		super(Attacking,self).update(dt)
+
