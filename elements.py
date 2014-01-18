@@ -20,6 +20,9 @@ class Element(object):
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
+	def interact(self,element):
+		pass
+
 #SubClass
 class Creature(Element):
 	def __init__(self, hp=10, *args, **kwargs):
@@ -57,8 +60,20 @@ class Monster(Creature):
 		super(Monster, self).__init__()
 
 class Chest(StillObject):
-	def __init__(self):
-		super(Chest,self).__init__()
+	images = {
+
+			Idle: [
+			[pyglet.image.load('images/chest/idle/chest_idle.png')]
+			]
+
+			 }
+	def __init__(self, name, *args, **kwargs):
+		self.name = name
+		self.images = Chest.images
+
+		print args, kwargs
+		super(Chest, self).__init__(*args, **kwargs)
 		# TODO : define what is in the chest
 
-		
+	
+if __name__ == '__main__':
