@@ -103,8 +103,24 @@ class Castle(Creature):
 			super(Castle,self).__init__(*args, **kwargs)
 		
 class Monster(Creature):
-	def __init__(self, arg):
-		super(Monster, self).__init__()
+	images = {
+
+			Idle: [
+			[pyglet.image.load('images/monster/idle/0_right.png')]
+			],
+			Moving : [
+			[pyglet.image.load('images/monster/moving/{}_right.png'.format(f)) for f in range(4)] 
+			
+			]
+			
+			 }
+
+	def __init__(self, name, *args, **kwargs):
+		self.name = name
+		self.images = Monster.images
+
+		super(Monster, self).__init__(*args, **kwargs)
+
 
 class Chest(StillObject):
 	images = {

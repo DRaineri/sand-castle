@@ -3,7 +3,9 @@
 
 import pyglet
 from grid import Grid
-from elements import Character, Castle
+
+from elements import Character, Monster, Castle
+
 from pyglet.window import key
 
 import config
@@ -37,6 +39,8 @@ class GameWindow(pyglet.window.Window):
 		self.elements = []
 
 		self.character = Character('Main Character', 10, 0, 0)
+		self.monster = Monster('Sharkinou',50, 0, 0)
+		self.elements.append(self.monster)
 		self.elements.append(self.character)
 
 		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
