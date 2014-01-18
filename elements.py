@@ -41,10 +41,10 @@ class Character(Creature):
 	images = {
 
 			Idle: [
-			[pyglet.image.load('images/char_idle_{}.png'.format(pos)) for pos in ['front', 'right', 'back', 'left']]
-			]
+			[pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
+			],
 			Moving : [
-			[pyglet.image.load('images/char_moving_{}_{}'.format(f,p)) for f in range(4) for p in ['front', 'right', 'back', 'left']]
+			[pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
 			
 			]	
 			 }
@@ -83,3 +83,5 @@ class Chest(StillObject):
 
 	
 if __name__ == '__main__':
+	pass
+
