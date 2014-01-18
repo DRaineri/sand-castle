@@ -6,8 +6,6 @@ class State(object):
 		self.t = 0
 		self.element = element		
 
-
-
 	def update(self, dt):
 		self.t += dt
 
@@ -19,6 +17,8 @@ class Idle(State):
 		super(Idle, self).__init__()
 		self.arg = arg
 
+	def update(self, dt):
+		self.time_passed += dt
 
 class Moving(State):
 	"""docstring for Moving"""
@@ -31,15 +31,19 @@ class Moving(State):
 
 	def update(self, dt):
 		super(Moving,self).update(dt)
-		angle = self.element
-		distancePix=self.element.speed*dt
-		self.element.pos.posX=distancePix*cos(angle)
-		self.element.pos.posY=distancePix*sin(angle)
+		self.time_passed += dt
 
-		imagesMoving = self.element.images[Moving]
-		imagesFrame=imagesMoving[(self.t / self.anim_delay) % len(self.element.images)]
-		self.element.cur_image=imagesFrame[ceil(angle/(2*PI)*len(imagesFrame))]	
-		
+		angle = self.element
+		distancePix = self.element.speed*dt
+		self.element.pos.posX = distancePix*cos(angle)
+		self.element.pos.posY = distancePix*sin(angle)
+
+		if (self.time_passed > self.anim_delay):	
+			imagesMoving = self.element.images[Moving]
+			imagesFrame = imagesMoving[(self.t / self.anim_delay) % len(self.element.images)]
+			self.element.cur_image=imagesFrame[ceil(angle/(2*PI)*len(imagesFrame))]	
+
+			self.time_passed = 0
 
 
 
