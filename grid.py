@@ -32,8 +32,8 @@ class Grid(object):
 
 	def neighbours(self, element):
 		neigh = []
-		b_x = element.x // config.CELL_SIZE - 1
-		b_y = element.y // config.CELL_SIZE - 1
+		b_x = int(element.x // config.CELL_SIZE - 1)
+		b_y = int(element.y // config.CELL_SIZE - 1)
 
 		for x in xrange(b_x, b_x + element.w + 1):
 			for y in xrange(b_y, b_y + element.h + 1):

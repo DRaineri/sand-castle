@@ -54,10 +54,11 @@ class GameWindow(pyglet.window.Window):
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
+		pyglet.clock.schedule_interval(self.addSeaMonster, 5)
 
 
-	def addSeaMonster(self):
-		monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
+	def addSeaMonster(self, dt=0):
+		monster = Monster(self, 0, random.randint(0,self.height), 1, 2)
 
 		self.elements.append(monster)
 		monster.setAngle()

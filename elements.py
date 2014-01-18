@@ -39,12 +39,14 @@ class Element(object):
 		return center
 
 	def draw(self):
-
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
 	def interact(self, character):
 		pass
+
+	def collision(self):
+		self.state = Idle(self)
 
 	def cells(self):
 		cell_x = int(self.x // config.CELL_SIZE)
@@ -132,7 +134,7 @@ class Monster(Creature):
 			
 			 }
 
-
+ 
 	def setAngle(self):
 		c_x, c_y = self.game.castle.x, self.game.castle.y
 		self.angle = atan2(c_y - self.y , c_x -self.x)
@@ -144,6 +146,14 @@ class Monster(Creature):
 
 		super(Monster, self).__init__(*args, **kwargs)
 		self.speed = 100
+
+	def collision(self):
+		neighbours = self.game.grid.neighbours(self)
+
+		for n in neighbours:
+			if isinstance(n, Castle) or isinstance(n, Character):
+				self.state = Attacking(self)
+				return
 
 class Chest(StillObject):
 	images = {

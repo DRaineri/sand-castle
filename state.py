@@ -59,7 +59,7 @@ class Moving(State):
 		if any(game.grid.grid[y][x].element for x, y in self.element.cells()
 			   if game.grid.grid[y][x].element and game.grid.grid[y][x].element != self.element):
 			self.element.x, self.element.y = l_x, l_y
-			self.state = Idle(self.element)
+			self.element.collision()
 
 	#def interact():
 	#	print "interact"
