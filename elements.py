@@ -31,6 +31,7 @@ class Element(object):
 		self.state.update(dt)
 
 	def draw(self):
+		print self.x, self.y
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
@@ -98,10 +99,8 @@ class Castle(Creature):
 			[pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
 			]
 			 }
-	def __init__(self, name, *args, **kwargs):
-			print args
+	def __init__(self, *args, **kwargs):
 			super(Castle,self).__init__(*args, **kwargs)
-			self.name=name
 		
 class Monster(Creature):
 	def __init__(self, arg):

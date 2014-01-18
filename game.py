@@ -38,8 +38,9 @@ class GameWindow(pyglet.window.Window):
 
 		self.character = Character('Main Character', 10, 0, 0)
 		self.elements.append(self.character)
-
-		self.castle= Castle('Main Castle',(self.grid.w/2)-2, (self.grid.h/2)+2, 4,4)
+		print (self.width)/2
+		print (self.height)/2
+		self.castle= Castle('Main Castle',(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 3,3)
 		self.elements.append(self.castle)
 
 		# Setting an update frequency of 60hz
