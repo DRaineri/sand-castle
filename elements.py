@@ -138,8 +138,8 @@ class Monster(Creature):
  
 	def setAngle(self):
 		c_x, c_y = self.game.castle.x, self.game.castle.y
-		self.angle = atan2(c_y - self.y , c_x -self.x)
-		self.state = Moving(self, 0)
+		offset = atan2(c_y - self.y , c_x -self.x)
+		self.state = Moving(self, offset)
 
 	def __init__(self, *args, **kwargs):
 		self.images = Monster.images
@@ -162,11 +162,9 @@ class Chest(StillObject):
 			Idle: [
 			[pyglet.image.load('images/chest/idle/chest_idle.png')]
 			]
-
 			 }
-	def __init__(self, item, *args, **kwargs):
-		self.item = item
 
+	def __init__(self, *args, **kwargs):
 		self.images = Chest.images
 		super(Chest, self).__init__(*args, **kwargs)
 	
