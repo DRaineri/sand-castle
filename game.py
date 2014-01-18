@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pyglet
+from grid import Grid
 
 class GameWindow(pyglet.window.Window):
 
@@ -14,6 +15,8 @@ class GameWindow(pyglet.window.Window):
 		bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 50, 255))
 		self.background_image = bg_color.create_image(self.width, self.height)
 		self.background = pyglet.sprite.Sprite(self.background_image)
+
+		self.grid = Grid(100, 60)
 
 		# Title
 		t_x = self.width / 2
@@ -30,11 +33,14 @@ class GameWindow(pyglet.window.Window):
 
 
 	def update(self, dt):
-		pass
+		for element in self.elements:
+			element.update(dt)
 
 	def on_draw(self):
 		self.background.draw()
+		self.grid.draw_background()
 		self.title.draw()
+
 
 		for element in self.elements:
 			element.draw()
@@ -42,8 +48,8 @@ class GameWindow(pyglet.window.Window):
 	def on_mouse_motion(self, x, y, dx, dy):
 		pass
 
-	def on_mouse_press(self, x, y):
-		print x, y
+	def on_mouse_press(self, x, y, button, modifiers):
+		pass
 
 	def on_key_press(self, symbol, modifiers):
 		x_diff = 0

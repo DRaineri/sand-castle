@@ -27,7 +27,7 @@ class StillObject(Element):
 
 #SubSubClass
 class Character(Creature):
-	images = {Idle: [], Moving: [Idle_character1.jpg,Idle_character2.jpg]}
+	images = {Idle: [], Running: []}
 
 	def __init__(self, name):
 		super(Character, self).__init__()
