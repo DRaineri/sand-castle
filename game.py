@@ -4,6 +4,7 @@
 import pyglet
 from grid import Grid
 from elements import Character
+from elements import Monster
 from pyglet.window import key
 
 import config
@@ -37,6 +38,8 @@ class GameWindow(pyglet.window.Window):
 		self.elements = []
 
 		self.character = Character('Main Character', 10, 0, 0)
+		self.monster = Monster('Sharkinou',50, 0, 0)
+		self.elements.append(self.monster)
 		self.elements.append(self.character)
 
 		# Setting an update frequency of 60hz
