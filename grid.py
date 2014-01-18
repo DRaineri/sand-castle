@@ -46,13 +46,8 @@ class Background(object):
 		self.sprite.draw()
 
 class Sand(Background):
-	image1 = pyglet.image.load('images/background/sand1.png')
-	image2 = pyglet.image.load('images/background/sand2.png')
-	image3 = pyglet.image.load('images/background/sand3.png')
-	image4 = pyglet.image.load('images/background/sand4.png')
-	image5 = pyglet.image.load('images/background/sand5.png')
 
-	images = [image1, image2, image3, image4, image5]
+	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sand1', 'sand2', 'sand3']]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Sand.images
@@ -60,27 +55,17 @@ class Sand(Background):
 
 
 class Jungle(Background):
-	image1 = pyglet.image.load('images/background/jungle1.png')
-	image2 = pyglet.image.load('images/background/jungle2.png')
-	image3 = pyglet.image.load('images/background/jungle3.png')
-	image4 = pyglet.image.load('images/background/jungle4.png')
-	image5 = pyglet.image.load('images/background/jungle5.png')
 
-	images = [image1, image2, image3, image4, image5]
+	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['jungle1', 'jungle2', 'jungle3']]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Jungle.images
 		super(Jungle, self).__init__(*args, **kwargs)
 
 class Sea(Background):
-	image1 = pyglet.image.load('images/background/sea1.png')
-	image2 = pyglet.image.load('images/background/sea2.png')
-	image3 = pyglet.image.load('images/background/sea3.png')
-	image4 = pyglet.image.load('images/background/sea4.png')
-	image5 = pyglet.image.load('images/background/sea5.png')
+	
+	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sea1', 'sea2', 'sea3']]
 
-	images = [image1, image2, image3, image4, image5]
- 
 	def __init__(self, *args, **kwargs):
 		self.images = Sea.images
 		super(Sea, self).__init__(*args, **kwargs)
