@@ -40,14 +40,17 @@ class Background(object):
 
 	def __init__(self, x, y):
 		super(Background, self).__init__()
-		self.sprite = pyglet.sprite.Sprite(random.choice(self.images), x, y)
+
+		image_population = [image  for (image, weight) in self.images for i in xrange(weight)]
+		self.sprite = pyglet.sprite.Sprite(random.choice(image_population), x, y)
 	
 	def draw(self):
 		self.sprite.draw()
 
 class Sand(Background):
 
-	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sand1', 'sand2', 'sand3']]
+	images = [(pyglet.image.load('images/background/sand{}.png'.format(i)), weight)
+	          for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Sand.images
