@@ -4,8 +4,10 @@
 import pyglet
 from grid import Grid
 from elements import Character
-from math import atan2
+
 import config
+from state import Moving, Idle
+from math import radians, atan2
 
 class GameWindow(pyglet.window.Window):
 
@@ -64,19 +66,19 @@ class GameWindow(pyglet.window.Window):
 		x_diff = 0
 		y_diff = 0
 		diff = 40
+		offset=0
 
 		if symbol == pyglet.window.key.UP:
-			self.character.y += diff
-			y_diff = 25
+			self.character.state=Moving(self.character, offset)
 		elif symbol == pyglet.window.key.DOWN:
-			self.character.y -= diff
-			y_diff = -25
+			offset = radians(180)
+			self.character.state=Moving(self.character, offset)
 		elif symbol == pyglet.window.key.RIGHT:
-			self.character.x += diff
-			x_diff = 25
+			offset = radians(-90)
+			self.character.state=Moving(self.character, offset)
 		elif symbol == pyglet.window.key.LEFT:
-			self.character.x -= diff
-			x_diff = -25
+			offset = radians(90)
+			self.character.state=Moving(self.character, offset)
 
 	def on_key_release(self, symbol, modifiers):
 		if symbol in {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT}:

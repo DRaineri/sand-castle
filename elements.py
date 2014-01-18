@@ -14,18 +14,23 @@ class Element(object):
 		self.cur_image = self.images[Idle][0][0]
 
 	def update(self, dt):
+		print dt
 		self.state.update(dt)
 
 	def draw(self):
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
+	def interact(self,element):
+		pass
+
 #SubClass
 class Creature(Element):
 	def __init__(self, hp=10, *args, **kwargs):
 		super(Creature, self).__init__(*args, **kwargs)
 		self.hp = hp
-		self.angle = 0
+		self.angle = 0.0
+		self.speed=50
 
 class StillObject(Element):
 	def __init__(self, *args, **kwargs):
@@ -38,7 +43,10 @@ class Character(Creature):
 			Idle: [
 			[pyglet.image.load('images/char_idle_{}.png'.format(pos)) for pos in ['front', 'right', 'back', 'left']]
 			]
-							
+			Moving : [
+			[pyglet.image.load('images/char_moving_{}_{}'.format(f,p)) for f in range(4) for p in ['front', 'right', 'back', 'left']]
+			
+			]	
 			 }
 
 	def __init__(self, name, *args, **kwargs):
@@ -49,6 +57,7 @@ class Character(Creature):
 		super(Character, self).__init__(*args, **kwargs)
 
 class Castle(Creature):
+
 	def __init__(self):
 		super(Castle,self).__init__()
 		
@@ -57,8 +66,20 @@ class Monster(Creature):
 		super(Monster, self).__init__()
 
 class Chest(StillObject):
-	def __init__(self):
-		super(Chest,self).__init__()
+	images = {
+
+			Idle: [
+			[pyglet.image.load('images/chest/idle/chest_idle.png')]
+			]
+
+			 }
+	def __init__(self, name, *args, **kwargs):
+		self.name = name
+		self.images = Chest.images
+
+		print args, kwargs
+		super(Chest, self).__init__(*args, **kwargs)
 		# TODO : define what is in the chest
 
-		
+	
+if __name__ == '__main__':
