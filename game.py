@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import pyglet
+from grid import Grid
+from elements import Character
 
 class GameWindow(pyglet.window.Window):
 
@@ -15,6 +17,8 @@ class GameWindow(pyglet.window.Window):
 		self.background_image = bg_color.create_image(self.width, self.height)
 		self.background = pyglet.sprite.Sprite(self.background_image)
 
+		self.grid = Grid(20, 10)
+
 		# Title
 		t_x = self.width / 2
 		t_y = self.height - 20
@@ -24,17 +28,24 @@ class GameWindow(pyglet.window.Window):
 		# Graphical objects
 		self.elements = []
 
+		self.character = Character('Main Character', 10, 0, 0)
 
 		# Setting an update frequency of 60hz
 		pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
 	def update(self, dt):
-		pass
+		self.character.update(dt)
+
+		for element in self.elements:
+			element.update(dt)
 
 	def on_draw(self):
 		self.background.draw()
+		self.grid.draw_background()
 		self.title.draw()
+
+		self.character.draw()
 
 		for element in self.elements:
 			element.draw()
@@ -42,20 +53,25 @@ class GameWindow(pyglet.window.Window):
 	def on_mouse_motion(self, x, y, dx, dy):
 		pass
 
-	def on_mouse_press(self, x, y):
-		print x, y
+	def on_mouse_press(self, x, y, button, modifiers):
+		pass
 
 	def on_key_press(self, symbol, modifiers):
 		x_diff = 0
 		y_diff = 0
+		diff = 40
 
 		if symbol == pyglet.window.key.UP:
+			self.character.y += diff
 			y_diff = 25
 		elif symbol == pyglet.window.key.DOWN:
+			self.character.y -= diff
 			y_diff = -25
 		elif symbol == pyglet.window.key.RIGHT:
+			self.character.x += diff
 			x_diff = 25
 		elif symbol == pyglet.window.key.LEFT:
+			self.character.x -= diff
 			x_diff = -25
 
 
