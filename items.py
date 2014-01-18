@@ -7,6 +7,7 @@ class Item(object):
 	def __init__(self):
 		super(Ressource, self).__init__()
 		self.Value = value;		
+
 #Subclasses
 class SharkLeather(Ressource):
 	"""First type of ressource, dropped on sea monster"""

@@ -15,7 +15,7 @@ class Element(object):
 		self._state = Idle(self)
 
 		self.last_state = Idle(self)
-		
+
 		self.cur_image = self.images[Idle][0][0]
 
 	@property
@@ -34,7 +34,7 @@ class Element(object):
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
-	def interact(self,element):
+	def interact(self, character):
 		pass
 
 	def cells(self):
@@ -67,7 +67,8 @@ class Character(Creature):
 			]	
 			 }
 
-	def __init__(self, name, *args, **kwargs):
+	def __init__(self, game, name, *args, **kwargs):
+		self.game = game
 		self.name = name
 		self.images = Character.images
 
@@ -129,14 +130,15 @@ class Chest(StillObject):
 			]
 
 			 }
-	def __init__(self, name, *args, **kwargs):
-		self.name = name
+	def __init__(self, item, *args, **kwargs):
+		self.item = item
+
 		self.images = Chest.images
-
 		super(Chest, self).__init__(*args, **kwargs)
-		# TODO : define what is in the chest
-
 	
+	def interact(self, character):
+		character.game.rubies += 1
+
 if __name__ == '__main__':
 	pass
 

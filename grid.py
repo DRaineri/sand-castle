@@ -9,9 +9,8 @@ class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
 		self.random_populate()
-		self.w=w
-		self.h=h
-		print self.h, self.w
+		self.w = w
+		self.h = h
 
 	def random_populate(self):
 		for y, row in enumerate(self.grid):
