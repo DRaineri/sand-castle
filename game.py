@@ -4,6 +4,7 @@
 import pyglet
 from grid import Grid
 from elements import Character
+from state import Moving, Idle
 
 class GameWindow(pyglet.window.Window):
 
@@ -62,17 +63,13 @@ class GameWindow(pyglet.window.Window):
 		diff = 40
 
 		if symbol == pyglet.window.key.UP:
-			self.character.y += diff
-			y_diff = 25
+			self.character.state=Moving(self.character)
 		elif symbol == pyglet.window.key.DOWN:
-			self.character.y -= diff
-			y_diff = -25
+			self.character.state=Moving(self.character)
 		elif symbol == pyglet.window.key.RIGHT:
-			self.character.x += diff
-			x_diff = 25
+			self.character.state=Moving(self.character)
 		elif symbol == pyglet.window.key.LEFT:
-			self.character.x -= diff
-			x_diff = -25
+			self.character.state=Moving(self.character)
 
 
 
