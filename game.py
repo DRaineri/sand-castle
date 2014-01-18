@@ -21,7 +21,7 @@ class GameWindow(pyglet.window.Window):
 		self.background_image = bg_color.create_image(self.width, self.height)
 		self.background = pyglet.sprite.Sprite(self.background_image)
 
-		self.grid = Grid(20, 10)
+		self.grid = Grid(25, 15)
 
 		# Title
 		t_x = self.width / 2
