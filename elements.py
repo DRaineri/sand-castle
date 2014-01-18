@@ -31,7 +31,6 @@ class Element(object):
 		self.state.update(dt)
 
 	def draw(self):
-		print self.x, self.y
 		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
 		sprite.draw()
 
@@ -72,7 +71,7 @@ class Character(Creature):
 		self.name = name
 		self.images = Character.images
 
-		super(Character, self).__init__(*args, **kwargs)
+		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
 	def attack(self):
 		#liste des cases du character

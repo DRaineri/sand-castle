@@ -17,13 +17,17 @@ class Grid(object):
 		for y, row in enumerate(self.grid):
 			for x, col in enumerate(row):
 				r_x, r_y = x * config.CELL_SIZE, y * config.CELL_SIZE
-				bg = Sand(r_x, r_y)
-				self.grid[y][x] = Cell(bg)
+				self.grid[y][x] =Sand(r_x, r_y)
 
 	def draw_background(self):
 		for row in self.grid:
 			for cell in row:
-				cell.draw()
+				cell.background.draw()
+
+	def draw_foreground(self):
+		for row in self.grid:
+			for cell in row:
+				cell.foreground.draw()
 
 	def neighbours(self, element):
 		neigh = []
@@ -42,31 +46,22 @@ class Grid(object):
 			for x, y in element.cells():
 				self.grid[y][x].element = element
 
-class Cell(object):
-	def __init__(self, background, element=None):
-		self.background = background
-		self.element = element
 
+class Cell(object):
+	def __init__(self,x,y, element=None):
+		self.element = element
+		image_population = [image for (image, weight) in self.images for i in xrange(weight)]
+		self.background = pyglet.sprite.Sprite(random.choice(image_population), x, y)
+		self.foreground= None
+		
 	def draw(self):
 		self.background.draw()
 		if self.element:
 			self.element.draw()
+		if self.foreground:
+			self.foreground.draw()
 
-class Background(object):
-	"""Class that generate a background object"""
-	
-	images = list()
-
-²	def __init__(self, x, y):
-		super(Background, self).__init__()
-
-		image_population = [image  for (image, weight) in self.images for i in xrange(weight)]
-		self.sprite = pyglet.sprite.Sprite(random.choice(image_population), x, y)
-	
-	def draw(self):
-		self.sprite.draw()
-
-class Sand(Background):
+class Sand(Cell):
 
 	images = [(pyglet.image.load('images/background/sand{}.png'.format(i)), weight)
 	          for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
@@ -76,7 +71,7 @@ class Sand(Background):
 		super(Sand, self).__init__(*args, **kwargs)
 
 
-class Jungle(Background):
+class Jungle(Cell):
 
 	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['jungle1', 'jungle2', 'jungle3']]
 
@@ -84,7 +79,7 @@ class Jungle(Background):
 		self.images = Jungle.images
 		super(Jungle, self).__init__(*args, **kwargs)
 
-class Sea(Background):
+class Sea(Cell):
 	
 	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sea1', 'sea2', 'sea3']]
 
