@@ -35,10 +35,13 @@ class GameWindow(pyglet.window.Window):
         # Background
         bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 20, 255))
         self.paused_img = bg_color.create_image(self.width, self.height)
-        self.paused_over= pyglet.sprite.Sprite(self.paused_img)
-        self.paused_over.opacity = 220
+        self.overlay= pyglet.sprite.Sprite(self.paused_img)
+        self.overlay.opacity = 220
         self.paused_txt = pyglet.text.Label(text="Paused", font_name="Ubuntu", bold=True, font_size=65,
                                        x=self.width / 2, y=self.height/2, anchor_x='center', anchor_y='center')
+
+        self.game_over_txt = pyglet.text.Label(text="Game Over", font_name="Ubuntu", bold=True, font_size=65,
+                                       x=self.width / 2, y=self.height/2 + 75, anchor_x='center', anchor_y='center')
 
         g_w, g_h = self.width // config.CELL_SIZE + 1, self.height // config.CELL_SIZE + 1
         self.grid = Grid(g_w, g_h)
@@ -69,15 +72,27 @@ class GameWindow(pyglet.window.Window):
     
         self.crafting_on = False
         self.paused = False
+        self.game_over = False
 
         # Setting an update frequency of 60hz
         self.schedule_tasks()
+
+    @property
+    def game_over(self):
+        return self._game_over
+
+    @game_over.setter
+    def game_over(self, value):
+        self._game_over = value
+        if value == True:
+            self.unschedule_tasks()
+    
 
     def schedule_tasks(self):
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
         pyglet.clock.schedule_interval(self.addJungleMonster, 5)
-        pyglet.clock.schedule_interval(self.shoot_monsters, 2)
+        pyglet.clock.schedule_interval(self.shoot_monsters, 5)
 
     def unschedule_tasks(self):
         pyglet.clock.unschedule(self.update)
@@ -145,8 +160,19 @@ class GameWindow(pyglet.window.Window):
         if self.crafting_on:
             self.screen_craft.draw()
 
-        if self.paused:
-            self.paused_over.draw()
+        if self.game_over:
+            self.overlay.draw()
+            self.game_over_txt.draw()
+            score_label = pyglet.text.Label(text="Your score: {}".format(self.score), font_name="Ubuntu", bold=True, font_size=40,
+                               x=self.width / 2, y=self.height/2 - 70, anchor_x='center', anchor_y='center')
+            score_label.draw()
+
+            click_label = pyglet.text.Label(text="Press ESC to go back to the menu", font_name="Ubuntu", bold=False, font_size=24,
+                               x=self.width / 2, y=self.height/2 - 150, anchor_x='center', anchor_y='center')
+            click_label.draw()
+
+        elif self.paused:
+            self.overlay.draw()
             self.paused_txt.draw()
 
 
@@ -205,7 +231,8 @@ class GameWindow(pyglet.window.Window):
             self.paused = False
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
-    
+        elif symbol == pyglet.window.key.ESCAPE:
+            self.close()
 
     def on_key_release(self, symbol, modifiers):
         movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
