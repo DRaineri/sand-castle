@@ -5,7 +5,7 @@ import pyglet
 from grid import Grid
 
 
-from elements import Character, Monster, Castle, Chest, Projectile, Foam
+from elements import Character, SeaMonster, Monster, JungleMonster, Castle, Chest, Projectile, Foam
 
 
 from pyglet.window import key
@@ -102,7 +102,6 @@ class GameWindow(pyglet.window.Window):
     def update(self, dt):
         for element in self.elements:
             element.update(dt)
-
         # Updating the element in grids
         self.grid.update_elements(self.elements)
         self.foam.update(dt)
