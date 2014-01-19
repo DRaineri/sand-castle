@@ -41,7 +41,7 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
 
-        self.character = Character(self, (self.width)/2-(1.5*config.CELL_SIZE)-10, (self.height)/2-10)
+        self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
         self.foam = Foam(self,50,-300)
@@ -174,7 +174,7 @@ class GameWindow(pyglet.window.Window):
 
 
 if __name__ == '__main__':
-    g = GameWindow(1200, 800)
+    g = GameWindow(1600, 800)
     # music = pyglet.resource.media('test.mp3')
     # music.play()
 
