@@ -1,5 +1,6 @@
 import pyglet
-import game
+import game 
+
 def draw_with_shadow(label, s_label=None):
     bak_color = label.color
     if label == s_label:
