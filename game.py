@@ -33,7 +33,8 @@ class GameWindow(pyglet.window.Window):
 
         # Resources
         self.ruby = 0
-        self.shark_leather = 0
+        self.shark_teeth = 0
+        self.bear_teeth = 0 
 
         # Background
         bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 50, 255))
@@ -49,7 +50,7 @@ class GameWindow(pyglet.window.Window):
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
-        self.foam = Foam(self,50,-300)
+        self.foam = Foam(self,-50,-300)
 
         self.elements.append(self.character)
 
@@ -129,7 +130,7 @@ class GameWindow(pyglet.window.Window):
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
-        header_text = "Rubies: {} - Shark Leather: {}".format(self.ruby, self.shark_leather)
+        header_text = "Rubies: {} - Shark Teeth: {} - Bear Teeth {}".format(self.ruby, self.shark_teeth, self.bear_teeth)
         header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()

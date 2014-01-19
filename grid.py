@@ -21,9 +21,9 @@ class Grid(object):
         for y, row in enumerate(self.grid):
             for x, col in enumerate(row):
                 r_x, r_y = x * config.CELL_SIZE, y * config.CELL_SIZE
-                if x<2:
+                if x<1:
                     self.grid[y][x] = Sea(r_x, r_y)
-                elif x==2:
+                elif x==1:
                     self.grid[y][x] = SeaBorder(r_x, r_y)
                 elif x>(self.w-4):
                     self.grid[y][x] = Jungle(r_x, r_y)
