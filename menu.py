@@ -32,9 +32,9 @@ class MenuWindow(pyglet.window.Window):
 
         self.width, self.height = args[:2]
 
-        def_x = 20
-        self.title = pyglet.text.Label("Tropical dreams", font_name='Stainy Personal Use Only', font_size=95, x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
-        
+        def_x = 50
+        self.title = pyglet.text.Label("Tropical dreams", font_name='Duxbury Beach', font_size=95, x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
+        self.title.color = (0,0,0,255)
         self.new_game = pyglet.text.Label("New game", font_name='Ubuntu', font_size=40,x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
         self.exit = pyglet.text.Label("Exit", font_name='Ubuntu', font_size=40,x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
         
@@ -51,9 +51,9 @@ class MenuWindow(pyglet.window.Window):
     def on_draw(self):
         self.bg.draw()
 
-        self.title.y = min(self.t_y,  self.height - 250)
-        self.new_game.y = min(self.t_y - 800, self.height - 500)
-        self.exit.y = min(self.t_y - 900, self.height - 600)
+        self.title.y = min(self.t_y,  self.height - 100)
+        self.new_game.y = min(self.t_y - 800, self.height - 400)
+        self.exit.y = min(self.t_y - 900, self.height - 500)
 
         draw_with_shadow(self.title)
 
