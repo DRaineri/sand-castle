@@ -39,8 +39,10 @@ class Grid(object):
 
 		for x in xrange(b_x, b_x + element.w + 2):
 			for y in xrange(b_y, b_y + element.h + 2):
-				el = self.grid[y][x].element
 				valid_coords = 0 <= x < self.w and 0 <= y < self.h
+				if not valid_coords:
+					continue
+				el = self.grid[y][x].element
 				valid_neighbour = not el is None and el != element and not el in neigh
 				if valid_coords and valid_neighbour:
 					neigh.append(self.grid[y][x].element)

@@ -14,7 +14,6 @@ from state import Moving, Idle, Attacking
 from math import radians, atan2
 
 class GameWindow(pyglet.window.Window):
-
     def __init__(self, *args, **kwargs):
         super(GameWindow, self).__init__(*args, **kwargs)
 
@@ -40,24 +39,29 @@ class GameWindow(pyglet.window.Window):
         self.elements = []
 
         self.character = Character(self, 10, 0)
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2, 2)
-
+        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+        
+        
         self.elements.append(self.character)
+        self.addSeaMonster()
+        self.addSeaMonster()
+        
+            
+
+
         self.elements.append(self.castle)
 
-        self.addSeaMonster()
-        # self.addSeaMonster()
-        
         # Setting an update frequency of 60hz
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
-        # pyglet.clock.schedule_interval(self.addSeaMonster, 5)
+        pyglet.clock.schedule_interval(self.addSeaMonster, 5)
 
 
     def addSeaMonster(self, dt=0):
         monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
 
         self.elements.append(monster)
-        monster.setAngle()
+        offset=monster.getAngle()
+        monster.state = Moving(monster, offset)
 
     def update(self, dt):
         for element in self.elements:
@@ -77,9 +81,7 @@ class GameWindow(pyglet.window.Window):
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
-        header_text = "HP: {} - Castle: {} - Rubies: {} - Shark Leather: {}".format(self.character.hp,
-            self.castle.hp, self.ruby, self.shark_leather)
-        
+        header_text = "Rubies: {} - Shark Leather: {}".format(self.ruby, self.shark_leather)
         header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()
@@ -97,17 +99,14 @@ class GameWindow(pyglet.window.Window):
     def on_mouse_press(self, x, y, button, modifiers): 
         if button == pyglet.window.mouse.LEFT:
             neighboors = self.grid.neighbours(self.character)
-            print 'char neigh =  ', neighboors
             for el in neighboors:
                 if isinstance(el, Monster):
                     # TODO : Change this by switching the state to attacking
                     self.character.attack(el)
-                    print el.hp
                     return
         elif button == pyglet.window.mouse.RIGHT:
             pass
             #wait release
-
     def on_mouse_release(self, x, y, button, modifiers):
         pass
 
@@ -132,9 +131,6 @@ class GameWindow(pyglet.window.Window):
 
 
     def on_key_release(self, symbol, modifiers):
-        
-        
-
         movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
         
         if symbol in movement_keys and not any(self.keys[s] for s in movement_keys):

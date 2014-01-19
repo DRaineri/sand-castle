@@ -123,10 +123,10 @@ class Monster(Creature):
 			 }
 
  
-	def setAngle(self):
+	def getAngle(self):
 		c_x, c_y = self.game.castle.x, self.game.castle.y
 		offset = atan2(c_y - self.y , c_x -self.x)
-		self.state = Moving(self, offset)
+		return offset
 
 	def __init__(self, *args, **kwargs):
 		self.images = Monster.images
