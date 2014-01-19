@@ -26,7 +26,7 @@ class GameWindow(pyglet.window.Window):
 
 		# Resources
 		self.ruby = 0
-		self.shark_leather = 0
+		self.shark_teeth = 0
 
 		# Background
 		bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 50, 255))
@@ -81,7 +81,7 @@ class GameWindow(pyglet.window.Window):
 		# Title
 		t_x = self.width - 20
 		t_y = self.height - 10
-		header_text = "Rubies: {} - Shark Leather: {}".format(self.ruby, self.shark_leather)
+		header_text = "Rubies: {} - Shark Teeth: {}".format(self.ruby, self.shark_teeth)
 		header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
 			                           x=t_x, y=t_y, anchor_x='right', anchor_y='top')
 		header.draw()
@@ -138,9 +138,9 @@ class GameWindow(pyglet.window.Window):
 
 if __name__ == '__main__':
 	
-	g = GameWindow(1280, 800)
-	music = pyglet.resource.media('test.mp3')
-	music.play()
+	g = GameWindow(1900, 1000)
+	#music = pyglet.resource.media('test.mp3')
+	#music.play()
 
 	# Running the app
 	pyglet.app.run()

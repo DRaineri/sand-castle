@@ -8,18 +8,26 @@ def random_bg():
 class Grid(object):
 	def __init__(self, w, h):
 		self.grid = [[ None for x in xrange(w)] for y in xrange(h)]
-		self.random_populate()
 
 		self.w = w
 		self.h = h
+		self.populate()
 
 
-	def random_populate(self):
+	def populate(self):
 		for y, row in enumerate(self.grid):
 			for x, col in enumerate(row):
 				r_x, r_y = x * config.CELL_SIZE, y * config.CELL_SIZE
-				self.grid[y][x] =Sand(r_x, r_y)
-
+				if x<2:
+					self.grid[y][x] = Sea(r_x, r_y)
+				elif x==2:
+					self.grid[y][x] = SeaBorder(r_x, r_y)
+				elif x>(self.w-4):
+					self.grid[y][x] = Jungle(r_x, r_y)
+				else:
+					self.grid[y][x] = Sand(r_x, r_y)
+				
+				
 	def draw_background(self):
 		for row in self.grid:
 			for cell in row:
@@ -78,7 +86,8 @@ class Sand(Cell):
 
 class Jungle(Cell):
 
-	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['jungle1', 'jungle2', 'jungle3']]
+	images = [(pyglet.image.load('images/background/jungle{}.png'.format(i)), weight)
+	          for (i, weight) in [(1, 1), (2, 1), (3,1), (4, 2), (5,2), (6,2)] ]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Jungle.images
@@ -86,11 +95,23 @@ class Jungle(Cell):
 
 class Sea(Cell):
 	
-	images = [pyglet.image.load('images/background/{}.png'.format(pos)) for pos in ['sea1', 'sea2', 'sea3']]
+	images = [(pyglet.image.load('images/background/sea{}.png'.format(i)), weight)
+	          for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
 
 	def __init__(self, *args, **kwargs):
 		self.images = Sea.images
 		super(Sea, self).__init__(*args, **kwargs)
+
+class SeaBorder(Cell):
+	
+	images = [(pyglet.image.load('images/background/seaborder{}.png'.format(i)), weight)
+	          for (i, weight) in [(1, 1), (2, 1), (3,1)] ]
+
+	def __init__(self, *args, **kwargs):
+		self.images = SeaBorder.images
+		super(SeaBorder, self).__init__(*args, **kwargs)
+		
+
 
 if __name__ == '__main__':
 
@@ -99,12 +120,12 @@ if __name__ == '__main__':
 	@window.event
 	def on_draw():
 			window.clear()
-			sandBack = Sand(x=window.width//4, y=window.height//4)
-			# seaBack = Sea(x=window.width//4, y=window.height//4)
+			#sandBack = Sand(x=window.width//4, y=window.height//4)
+			seaBack = SeaBorder(x=window.width//4, y=window.height//4)
 			# jungleBack = Jungle(x=window.width//4, y=window.height//4)
 
-			sandBack.draw()
-			# seaBack.draw()
+			#sandBack.draw()
+			seaBack.draw()
 			# jungleBack.draw()
 
 	pyglet.app.run()
