@@ -54,17 +54,20 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
 
+        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+        self.elements.append(self.castle)
+
+       
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.elements.append(self.character)
 
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
-        self.elements.append(self.castle)
 
         self.addSeaMonster()
         self.addSeaMonster()
         self.addJungleMonster()
 
         self.elements.append(Chest(self,750,0))
+
         
         self.foam = Foam(self,-50,-300)
         self.forest = Forest(self,self.width-100,0)
@@ -262,8 +265,8 @@ class GameWindow(pyglet.window.Window):
 
 if __name__ == '__main__':
     g = GameWindow(1600, 800)
-    # music = pyglet.resource.media('test.mp3')
-    # music.play()
+    music = pyglet.resource.media('test.mp3')
+    music.play()
 
 
     # Running the app
