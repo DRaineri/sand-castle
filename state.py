@@ -70,30 +70,34 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element,target):
+	def __init__(self, element,target,attack_speed=0):
 		super(Attacking, self).__init__(element)
+		self.attack_speed=attack_speed
 		self.images = self.element.images[Attacking]
-		self.target = target
-
+		self.element.target = target
+		self.time_passed=0
 
 
 	def update(self, dt):
 		super(Attacking,self).update(dt)
-		self.element.attack(self.target)
-		neighbours = self.element.game.grid.neighbours(self.element)
+		self.time_passed+=dt
+		if self.t> self.attack_speed:
+			self.element.attack(self.element.target)
+			self.time_passed=0
 
-		for n in neighbours:
-			if n==self.target:
-				return
-		self.element.state=Moving(self.element, self.element.getAngle())
+		self.element.target_missed()
+
 
 
 
 class Dying(State):
 	"""docstring for Dying"""
-	def __init__(self, element, arg):
-		super(Dying,self).__init__(element)
+	attack_speed=1
+	def __init__(self, element, attack_speed=1):
+		self.anim_delay=attack_speed
+		super(Dying,self).__init__(element,attack_speed)
 		self.images = self.element.images[Dying]
+
 
 	def update(self,dt):
 		super(Dying,self).update(dt)

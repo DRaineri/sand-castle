@@ -41,7 +41,7 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
 
-        self.character = Character(self, (self.width)/2-(1.5*config.CELL_SIZE)-10, (self.height)/2-10)
+        self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
         self.foam = Foam(self,50,-300)
@@ -125,9 +125,11 @@ class GameWindow(pyglet.window.Window):
         if button == pyglet.window.mouse.LEFT:
             neighboors = self.grid.neighbours(self.character)
             for el in neighboors:
+
                 if (isinstance(el, SeaMonster)) or (isinstance(el, JungleMonster)):
                     # TODO : Change this by switching the state to attacking
                     self.character.attack(el)
+
                     return
         elif button == pyglet.window.mouse.RIGHT:
             cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
@@ -189,7 +191,7 @@ class GameWindow(pyglet.window.Window):
 
 
 if __name__ == '__main__':
-    g = GameWindow(1900, 1000)
+    g = GameWindow(1600, 800)
     # music = pyglet.resource.media('test.mp3')
     # music.play()
 
