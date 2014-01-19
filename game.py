@@ -148,7 +148,7 @@ class GameWindow(pyglet.window.Window):
             self.character.state = Idle(self.character)
 
 if __name__ == '__main__':
-    g = GameWindow(1900, 1000)
+    g = GameWindow(1200, 800)
     # music = pyglet.resource.media('test.mp3')
     # music.play()
 

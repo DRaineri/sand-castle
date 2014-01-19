@@ -70,18 +70,20 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element,target,attack_speed=1):
+	def __init__(self, element,target,attack_speed=0.1):
 		super(Attacking, self).__init__(element)
 		self.attack_speed=attack_speed
 		self.images = self.element.images[Attacking]
 		self.target = target
-
+		self.time_passed=0
 
 
 	def update(self, dt):
 		super(Attacking,self).update(dt)
+		self.time_passed+=dt
 		if self.t> self.attack_speed:
 			self.element.attack(self.target)
+			self.time_passed=0
 		neighbours = self.element.game.grid.neighbours(self.element)
 
 		if not self.target in neighbours:
