@@ -134,8 +134,10 @@ class GameWindow(pyglet.window.Window):
             self.character.state=Moving(self.character, offset)
         elif symbol == pyglet.window.key.P:
             pyglet.clock.unschedule(self.update)
+            pyglet.clock.unschedule(self.addSeaMonster)
         elif symbol == pyglet.window.key.G:
             pyglet.clock.schedule_interval(self.update, 1.0 / 60)
+            pyglet.clock.schedule_interval(self.addSeaMonster, 5)
 
 
     def on_key_release(self, symbol, modifiers):
