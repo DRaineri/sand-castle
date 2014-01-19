@@ -4,13 +4,13 @@
 import pyglet
 from grid import Grid
 
-from elements import Character, Monster, Castle
+from elements import Character, Monster, Castle, Chest
 
 from pyglet.window import key
 
 import config
 import random
-from state import Moving, Idle, Attacking
+from state import Moving, Idle, Attacking,Dying
 from math import radians, atan2
 
 class GameWindow(pyglet.window.Window):
@@ -47,7 +47,7 @@ class GameWindow(pyglet.window.Window):
         self.addSeaMonster()
         self.addSeaMonster()
         
-            
+        self.elements.append(Chest(self,750,0))
 
 
         self.elements.append(self.castle)
@@ -107,7 +107,10 @@ class GameWindow(pyglet.window.Window):
                     self.character.attack(el)
                     return
         elif button == pyglet.window.mouse.RIGHT:
-            pass
+            cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
+            if cell.element and cell.element in self.grid.neighbours(self.character):
+                cell.element.interact(self.character)
+
             #wait release
     def on_mouse_release(self, x, y, button, modifiers):
         pass
@@ -130,6 +133,12 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.LEFT:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
+        elif symbol == pyglet.window.key.P:
+            pyglet.clock.unschedule(self.update)
+            pyglet.clock.unschedule(self.addSeaMonster)
+        elif symbol == pyglet.window.key.G:
+            pyglet.clock.schedule_interval(self.update, 1.0 / 60)
+            pyglet.clock.schedule_interval(self.addSeaMonster, 5)
 
 
     def on_key_release(self, symbol, modifiers):
