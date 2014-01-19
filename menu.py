@@ -67,7 +67,7 @@ class MenuWindow(pyglet.window.Window):
             self.selected = (self.selected - 1) % len(self.labels)
         elif symbol == pyglet.window.key.ENTER:
             if self.labels[self.selected] == self.new_game:
-                w = GameWindow(fullscreen=True)
+                w = GameWindow(1600, 800)
             elif self.labels[self.selected] == self.exit:
                 self.close()
 
