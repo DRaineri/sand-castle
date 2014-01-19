@@ -9,17 +9,17 @@ class Item(object):
 		self.Value = value;		
 
 #Subclasses
-class SharkLeather(Ressource):
+class SharkTeeth(Item):
 	"""First type of ressource, dropped on sea monster"""
 	
-	name = 'SharkLeather'
-#	icon = pyglet.image.load('images/ressources/sharkleather.png')
+	name = 'SharkTeeth'
+#	icon = pyglet.image.load('images/ressources/SharkTeeth.png')
 	
 	def __init__(self):
-		super(SharkLeather, self).__init__()
+		super(SharkTeeth, self).__init__()
 		
 
-class Ruby(Ressource):
+class Ruby(Item):
 	"""Third type of ressource, taken in chest"""
 	name = 'Ruby'
 #	icon = pyglet.image.load('images/ressources/ruby.png')
@@ -27,7 +27,13 @@ class Ruby(Ressource):
 			super(Ruby, self).__init__()
 		
 		
-
+class BearTeeth(Item):
+	"""Second type of ressource, drop on jungle monster"""
+	name = 'BearTeeth'
+#	icon = pyglet.image.load('images/ressources/ruby.png')
+	def __init__(self):
+			super(BearTeeth, self).__init__()
+		
 
 		
 

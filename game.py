@@ -80,10 +80,11 @@ class GameWindow(pyglet.window.Window):
         self.background.draw()
         self.grid.draw_background()
 
+
         # Drawing all elements
         for element in self.elements:
             element.draw()
-
+        self.grid.draw_foreground()
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
@@ -169,9 +170,10 @@ class GameWindow(pyglet.window.Window):
 
 
 if __name__ == '__main__':
-    g = GameWindow(1280, 800)
+    g = GameWindow(1900, 1000)
     # music = pyglet.resource.media('test.mp3')
     # music.play()
+
 
     # Running the app
     pyglet.app.run()
