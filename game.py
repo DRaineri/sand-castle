@@ -4,7 +4,7 @@
 import pyglet
 from grid import Grid
 
-from elements import Character, Monster, Castle
+from elements import Character, Monster, Castle, Chest
 
 from pyglet.window import key
 
@@ -48,7 +48,7 @@ class GameWindow(pyglet.window.Window):
 		self.addSeaMonster()
 		
 			
-
+		self.elements.append(Chest(self,1250,0))
 
 		self.elements.append(self.castle)
 
@@ -100,7 +100,12 @@ class GameWindow(pyglet.window.Window):
 		if button == pyglet.window.mouse.LEFT:
 			self.character.attack()
 		elif button == pyglet.window.mouse.RIGHT:
-			pass
+			if self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE].element:
+				if self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE].element in self.grid.neighbours(self.character):
+					self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE].element.interact(self.character)
+					print "vous avez", self.ruby
+				else:
+					print "Rapproche toi"
 			#wait release
 
 	def on_mouse_release(self, x, y, button, modifiers):
@@ -138,7 +143,7 @@ class GameWindow(pyglet.window.Window):
 
 if __name__ == '__main__':
 	
-	g = GameWindow(1280, 800)
+	g = GameWindow(1500, 800)
 	music = pyglet.resource.media('test.mp3')
 	music.play()
 

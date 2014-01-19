@@ -167,9 +167,10 @@ class Chest(StillObject):
 	def __init__(self, *args, **kwargs):
 		self.images = Chest.images
 		super(Chest, self).__init__(*args, **kwargs)
+		self.angle = 0.0
 	
 	def interact(self, character):
-		character.game.rubies += 1
+		character.game.ruby += 1
 
 if __name__ == '__main__':
 	pass
