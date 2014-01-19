@@ -70,11 +70,11 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element,target,attack_speed=0):
+	def __init__(self, element,target,attack_speed=1):
 		super(Attacking, self).__init__(element)
 		self.attack_speed=attack_speed
 		self.images = self.element.images[Attacking]
-		self.element.target = target
+		self.target = target
 		self.time_passed=0
 
 
@@ -82,10 +82,10 @@ class Attacking(State):
 		super(Attacking,self).update(dt)
 		self.time_passed+=dt
 		if self.t> self.attack_speed:
-			self.element.attack(self.element.target)
+			self.element.attack(self.target)
 			self.time_passed=0
 
-		self.element.target_missed()
+		self.element.target_missed(self.target)
 
 
 

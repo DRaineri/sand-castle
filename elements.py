@@ -63,8 +63,7 @@ class Element(object):
     def is_collidable(self):
         return True
 
-    def target_missed(self):        
-        neighbours = self.game.grid.neighbours(self)
+    def target_missed(self,target):     
         self.state = Moving(self, self.angle)
 
 
@@ -83,7 +82,6 @@ class Creature(Element):
         element.hp -= self.att
         if element.hp<=0:
             element.state=Dying(element,1)
-
 
 class StillObject(Element):
     def __init__(self, *args, **kwargs):
@@ -155,8 +153,10 @@ class Monster(Creature):
             
              }
 
-    def target_missed(self):
-        self.state = Moving(self, self.getAngle())
+    def target_missed(self,target):
+        neighbours = self.game.grid.neighbours(self)
+        if not target in neighbours:
+            self.state = Moving(self, self.getAngle())
  
     def getAngle(self):
         c_x, c_y = self.game.castle.x, self.game.castle.y
