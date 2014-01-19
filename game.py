@@ -50,29 +50,25 @@ class GameWindow(pyglet.window.Window):
         self.elements = []
 
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
+        self.elements.append(self.character)
 
-
+        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+        self.elements.append(self.castle)
 
         self.addSeaMonster()
         self.addSeaMonster()
         self.addJungleMonster()
 
         self.elements.append(Chest(self,750,0))
-        self.elements.append(self.character)
-
-        self.screen_craft = ScreenCraft(self)
-
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
-
-        self.elements.append(self.castle)
         
         self.foam = Foam(self,-50,-300)
         self.forest = Forest(self,self.width-100,0)
-        self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
         self.paused = False
         self.game_over = False
+
+        self.screen_craft = ScreenCraft(self)
 
         # Setting an update frequency of 60hz
         self.schedule_tasks()
