@@ -25,14 +25,20 @@ class GameWindow(pyglet.window.Window):
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
 
+        self.score = 0
+
         # Resources
         self.ruby = 0
-        self.shark_leather = 0
+        self.shark_teeth = 0
+        self.bear_pelt = 0
 
         # Background
-        bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 50, 255))
-        self.background_image = bg_color.create_image(self.width, self.height)
-        self.background = pyglet.sprite.Sprite(self.background_image)
+        bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 20, 255))
+        self.paused_img = bg_color.create_image(self.width, self.height)
+        self.paused_over= pyglet.sprite.Sprite(self.paused_img)
+        self.paused_over.opacity = 220
+        self.paused_txt = pyglet.text.Label(text="Paused", font_name="Ubuntu", bold=True, font_size=65,
+                                       x=self.width / 2, y=self.height/2, anchor_x='center', anchor_y='center')
 
         g_w, g_h = self.width // config.CELL_SIZE + 1, self.height // config.CELL_SIZE + 1
         self.grid = Grid(g_w, g_h)
@@ -51,14 +57,23 @@ class GameWindow(pyglet.window.Window):
         self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
+        self.paused = False
 
         # Setting an update frequency of 60hz
+        self.schedule_tasks()
+
+    def schedule_tasks(self):
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
         pyglet.clock.schedule_interval(self.addJungleMonster, 5)
-
         pyglet.clock.schedule_interval(self.shoot_monsters, 2)
 
+    def unschedule_tasks(self):
+        pyglet.clock.unschedule(self.update)
+        pyglet.clock.unschedule(self.addSeaMonster)
+        pyglet.clock.unschedule(self.addJungleMonster)
+        pyglet.clock.unschedule(self.shoot_monsters)
+            
     def shoot_monsters(self, dt=0):
         monster = None
         for el in self.elements:
@@ -96,7 +111,6 @@ class GameWindow(pyglet.window.Window):
         self.foam.update(dt)
 
     def on_draw(self):
-        self.background.draw()
         self.grid.draw_background()
 
 
@@ -110,13 +124,20 @@ class GameWindow(pyglet.window.Window):
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
-        header_text = "Rubies: {} - Shark Leather: {}".format(self.ruby, self.shark_leather)
+        header_text = "Score: {} - Rubies: {} - Bear Pelt {} - Shark Teeth: {}".format(self.score, self.ruby,
+                       self.bear_pelt, self.shark_teeth)
         header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()
 
         if self.crafting_on:
             self.screen_craft.draw()
+
+        if self.paused:
+            self.paused_over.draw()
+            self.paused_txt.draw()
+
+
 
 
     def on_mouse_motion(self, x, y, dx, dy): 
@@ -159,14 +180,12 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.LEFT:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
-        elif symbol == pyglet.window.key.P:
-            pyglet.clock.unschedule(self.update)
-            pyglet.clock.unschedule(self.addSeaMonster)
-            pyglet.clock.unschedule(self.addJungleMonster)
-        elif symbol == pyglet.window.key.G:
-            pyglet.clock.schedule_interval(self.update, 1.0 / 60)
-            pyglet.clock.schedule_interval(self.addSeaMonster, 5)
-            pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+        elif symbol == pyglet.window.key.P and not self.paused:
+            self.unschedule_tasks()
+            self.paused = True
+        elif symbol == pyglet.window.key.P and self.paused:
+            self.schedule_tasks()
+            self.paused = False
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
     
@@ -178,18 +197,15 @@ class GameWindow(pyglet.window.Window):
             self.character.state = Idle(self.character)
 
     def launch_crafting(self):
-        pyglet.clock.unschedule(self.update)
-        pyglet.clock.unschedule(self.addSeaMonster)
-        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+        self.unschedule_tasks()
 
         self.crafting_on = True
         self.screen_craft.run_crafting()
 
     def leave_crafting(self):
         self.crafting_on = False
-        pyglet.clock.schedule_interval(self.update, 1.0 / 60)
-        pyglet.clock.schedule_interval(self.addSeaMonster, 5)
-        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+        
+        self.schedule_tasks()
 
 
 
