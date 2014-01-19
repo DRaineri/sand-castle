@@ -66,6 +66,8 @@ class Grid(object):
                 cell.element = None
 
         for element in elements:
+            if not element.is_collidable():
+                continue
             for x, y in element.cells():
                 self.grid[y][x].element = element
 
@@ -134,8 +136,7 @@ class SeaBorder(Cell):
 
     def update(self):
         self.tick += 1
-        dx = cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4
-        print dx
+        dx = (cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4)*0.3
         self.foreground = pyglet.sprite.Sprite(self.foreground.image,self.x+dx,self.y)
 
 

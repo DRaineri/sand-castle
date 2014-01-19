@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from math import cos, sin, ceil, pi
-import elements
+
 class State(object):
 	"""docstring for State"""
 	anim_delay = 0.1
@@ -15,7 +15,11 @@ class State(object):
 	def update(self, dt):
 		self.t += dt
 
-		frame_id = int(self.t / self.anim_delay) % len(self.images)
+		frame_id = int(self.t / self.anim_delay)
+
+		if frame_id >= len(self.images):
+			self.anim_looped()
+			frame_id = frame_id % len(self.images)
 
 		images_frame = self.images[frame_id]
 
@@ -23,6 +27,9 @@ class State(object):
 		angle_fragment = int(len(images_frame) * (pos_angle / (2 * pi))) 
 
 		self.element.cur_image = images_frame[angle_fragment]	
+
+	def anim_looped(self):
+		pass
 
 class Idle(State):
 	"""docstring for Idle"""
@@ -70,34 +77,30 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element,target):
+	def __init__(self, element, anim_delay=1):
 		super(Attacking, self).__init__(element)
 		self.images = self.element.images[Attacking]
-		self.target = target
-
-
 
 	def update(self, dt):
-		super(Attacking,self).update(dt)
-		self.element.attack(self.target)
-		neighbours = self.element.game.grid.neighbours(self.element)
+		super(Attacking, self).update(dt)
 
-		for n in neighbours:
-			if n==self.target:
-				return
-		self.element.state=Moving(self.element, self.element.getAngle())
+	def anim_looped(self):
+		self.element.attack_finished()
 
 
 
 class Dying(State):
 	"""docstring for Dying"""
-	def __init__(self, element, arg):
-		super(Dying,self).__init__(element)
+	def __init__(self, element, anim_delay=0.2):
+		super(Dying,self).__init__(element, anim_delay)
 		self.images = self.element.images[Dying]
 
 	def update(self,dt):
-		super(Dying,self).update(dt)
+		super(Dying, self).update(dt)
 
+	def anim_looped(self):
+		# Removing the element from the game
+		self.element.game.elements.remove(self.element)
 
 #class Damaging(object):
 #	"""docstring for Damaging"""

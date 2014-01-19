@@ -4,7 +4,9 @@
 import pyglet
 from grid import Grid
 
-from elements import Character, Monster, Castle, Chest
+
+from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
+
 
 from pyglet.window import key
 
@@ -41,33 +43,71 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
 
-        self.character = Character(self, 10, 0)
+        self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
-        
+        self.foam = Foam(self,50,-300)
+
         self.elements.append(self.character)
+<<<<<<< HEAD
         #self.addSeaMonster()
         #self.addSeaMonster()
         
+=======
+        self.addSeaMonster()
+        self.addSeaMonster()
+        self.addJungleMonster()
+
+>>>>>>> 6451231fd0bcbd06ac9783a09948ac7b605417e3
         self.elements.append(Chest(self,750,0))
 
 
-        self.elements.append(self.castle)
 
+<<<<<<< HEAD
         self.screen_craft = Screen_craft(self)
+=======
+        self.elements.append(self.castle)
+    
+        self.screen_craft = Screen_craft()
+>>>>>>> 6451231fd0bcbd06ac9783a09948ac7b605417e3
         self.crafting_on = False
+
 
         # Setting an update frequency of 60hz
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
+        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
 
+        pyglet.clock.schedule_interval(self.shoot_monsters, 2)
+
+    def shoot_monsters(self, dt=0):
+        monster = None
+        for el in self.elements:
+            if isinstance(el, Monster):
+                monster = el
+                break
+
+
+        if not monster:
+            return
+
+        proj = Projectile(self, self.castle.x, self.castle.y)
+        proj.shoot(monster)
+        self.elements.append(proj)
 
     def addSeaMonster(self, dt=0):
-        monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
+        sea_monster = SeaMonster(self, 0, random.randint(0,self.height), 2, 2)
 
-        self.elements.append(monster)
-        offset=monster.getAngle()
-        monster.state = Moving(monster, offset)
+        self.elements.append(sea_monster)
+        offset=sea_monster.getAngle()
+        sea_monster.state = Moving(sea_monster, offset)
+
+    def addJungleMonster(self, dt=0):
+        jungle_monster = JungleMonster(self, self.width, random.randint(0,self.height), 2, 2)
+
+        self.elements.append(jungle_monster)
+        offset=jungle_monster.getAngle()
+        jungle_monster.state = Moving(jungle_monster, offset)
 
     def update(self, dt):
         for element in self.elements:
@@ -75,6 +115,7 @@ class GameWindow(pyglet.window.Window):
 
         # Updating the element in grids
         self.grid.update_elements(self.elements)
+        self.foam.update(dt)
 
     def on_draw(self):
         self.background.draw()
@@ -84,7 +125,10 @@ class GameWindow(pyglet.window.Window):
         # Drawing all elements
         for element in self.elements:
             element.draw()
+        
         self.grid.draw_foreground()
+        self.foam.draw()
+
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
@@ -97,7 +141,6 @@ class GameWindow(pyglet.window.Window):
             self.screen_craft.draw()
 
 
-
     def on_mouse_motion(self, x, y, dx, dy): 
         self.update_angle(x, y)
 
@@ -107,6 +150,7 @@ class GameWindow(pyglet.window.Window):
         self.character.angle = atan2(y - c_y, x - c_x)
 
 
+<<<<<<< HEAD
     def on_mouse_press(self, x, y, button, modifiers):
         if self.crafting_on:
             print "hola"
@@ -124,6 +168,24 @@ class GameWindow(pyglet.window.Window):
                     cell.element.interact(self.character)
 
 
+=======
+    def on_mouse_press(self, x, y, button, modifiers): 
+        if button == pyglet.window.mouse.LEFT:
+            neighboors = self.grid.neighbours(self.character)
+            for el in neighboors:
+
+                if (isinstance(el, SeaMonster)) or (isinstance(el, JungleMonster)):
+                    # TODO : Change this by switching the state to attacking
+                    self.character.attack(el)
+
+                    return
+        elif button == pyglet.window.mouse.RIGHT:
+            cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
+            if cell.element and cell.element in self.grid.neighbours(self.character):
+                cell.element.interact(self.character)
+
+            #wait release
+>>>>>>> 6451231fd0bcbd06ac9783a09948ac7b605417e3
     def on_mouse_release(self, x, y, button, modifiers):
         pass
 
@@ -148,11 +210,17 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.P:
             pyglet.clock.unschedule(self.update)
             pyglet.clock.unschedule(self.addSeaMonster)
+            pyglet.clock.unschedule(self.addJungleMonster)
         elif symbol == pyglet.window.key.G:
             pyglet.clock.schedule_interval(self.update, 1.0 / 60)
             pyglet.clock.schedule_interval(self.addSeaMonster, 5)
+<<<<<<< HEAD
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
+=======
+            pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+
+>>>>>>> 6451231fd0bcbd06ac9783a09948ac7b605417e3
 
 
     def on_key_release(self, symbol, modifiers):
@@ -164,6 +232,7 @@ class GameWindow(pyglet.window.Window):
     def launch_crafting(self):
         pyglet.clock.unschedule(self.update)
         pyglet.clock.unschedule(self.addSeaMonster)
+        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
 
         self.crafting_on = True
         self.screen_craft.run_crafting()
@@ -172,11 +241,12 @@ class GameWindow(pyglet.window.Window):
         self.crafting_on = False
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
+        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
 
 
 
 if __name__ == '__main__':
-    g = GameWindow(1900, 1000)
+    g = GameWindow(1600, 800)
     # music = pyglet.resource.media('test.mp3')
     # music.play()
 
