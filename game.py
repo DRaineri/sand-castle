@@ -103,7 +103,7 @@ class GameWindow(pyglet.window.Window):
             for el in neighboors:
                 if isinstance(el, Monster):
                     # TODO : Change this by switching the state to attacking
-                    self.character.attack(el)
+                    self.character.state=Attacking(self,el)
                     return
         elif button == pyglet.window.mouse.RIGHT:
             cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
