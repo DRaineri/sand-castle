@@ -75,10 +75,8 @@ class MenuWindow(pyglet.window.Window):
 if __name__ == '__main__' :
     m = MenuWindow(1500, 800)
     music = pyglet.media.Player()
-    source = pyglet.media.load('loopedn.mp3')
     source1 = pyglet.media.load('intro.mp3')
     music.queue(source)
-    music.queue(source1)
     music.play()
 
     pyglet.app.run()
