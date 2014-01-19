@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from math import cos, sin, ceil, pi
-import elements
+
 class State(object):
 	"""docstring for State"""
 	anim_delay = 0.1
@@ -70,8 +70,9 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element,target):
+	def __init__(self, element,target,attack_speed=1):
 		super(Attacking, self).__init__(element)
+		self.attack_speed=attack_speed
 		self.images = self.element.images[Attacking]
 		self.target = target
 
@@ -79,21 +80,23 @@ class Attacking(State):
 
 	def update(self, dt):
 		super(Attacking,self).update(dt)
-		self.element.attack(self.target)
+		if self.t> self.attack_speed:
+			self.element.attack(self.target)
 		neighbours = self.element.game.grid.neighbours(self.element)
 
-		for n in neighbours:
-			if n==self.target:
-				return
-		self.element.state=Moving(self.element, self.element.getAngle())
+		if not self.target in neighbours:
+			self.element.target_missed()
 
 
 
 class Dying(State):
 	"""docstring for Dying"""
-	def __init__(self, element, arg):
-		super(Dying,self).__init__(element)
+	attack_speed=1
+	def __init__(self, element, attack_speed=1):
+		self.anim_delay=attack_speed
+		super(Dying,self).__init__(element,attack_speed)
 		self.images = self.element.images[Dying]
+
 
 	def update(self,dt):
 		super(Dying,self).update(dt)

@@ -48,6 +48,10 @@ class Element(object):
 	def collision(self):
 		self.state = Idle(self)
 
+	def target_missed(self):
+		self.state = Moving(self, self.angle)
+
+
 	def cells(self):
 		cell_x = int(self.x // config.CELL_SIZE)
 		cell_y = int(self.y // config.CELL_SIZE)
@@ -68,7 +72,7 @@ class Creature(Element):
 	def attack(self, element):
 		element.hp -= self.att
 		if element.hp<=0:
-			element.state=Dying(self,0)
+			element.state=Dying(element,1)
 
 
 class StillObject(Element):
@@ -87,6 +91,9 @@ class Character(Creature):
 			],
 			Dying : [
 			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+			],
+			Attacking : [
+			[pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
 			],
 			 }
 
@@ -136,6 +143,8 @@ class Monster(Creature):
 			
 			 }
 
+	def target_missed(self):
+		self.state = Moving(self, self.getAngle())
  
 	def getAngle(self):
 		c_x, c_y = self.game.castle.x, self.game.castle.y
