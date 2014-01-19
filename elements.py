@@ -79,7 +79,7 @@ class Creature(Element):
 
     def attack_finished(self):
         for n in self.game.grid.neighbours(self):
-            if not self.attackable(n):
+            if not self.attackable(n) or n.hp < 0:
                 continue
             self.attack(n)
 
@@ -168,11 +168,13 @@ class Character(Creature):
         self.att = int(self.att * 1.3)
 
         if value == 2:
-            self.game.elements.remove(self.game.castle)
+            if self.game.castle in self.game.elements:
+                self.game.elements.remove(self.game.castle)
             self.game.castle = CastleLvl2(self.game,(self.game.width)/2-(1.5*config.CELL_SIZE), (self.game.height)/2, 2,2)
             self.game.elements.append(self.game.castle)
         elif value == 3:
-            self.game.elements.remove(self.game.castle)
+            if self.game.castle in self.game.elements:
+                self.game.elements.remove(self.game.castle)
             self.game.castle = CastleLvl3(self.game,(self.game.width)/2-(1.5*config.CELL_SIZE), (self.game.height)/2, 2,2)
             self.game.elements.append(self.game.castle)
 
@@ -210,14 +212,14 @@ class CastleLvl1(Castle):
         [pyglet.image.load('images/castle/idle/etat0.png')]
         ],
         Dying : [
-        [pyglet.image.load('images/castle/dying/château1_{}.png'.format(p)) for p in xrange(4)]
+        [pyglet.image.load('images/castle/dying/château1_{}.png'.format(p))] for p in xrange(4)
         ],
      }
 
     def __init__(self, *args, **kwargs):
         self.images = CastleLvl1.images
         super(CastleLvl1, self).__init__(*args, **kwargs)
-        self.total_hp = self.hp = 200
+        self.total_hp = self.hp = 120
 
 class CastleLvl2(Castle):
     images = {
@@ -231,7 +233,7 @@ class CastleLvl2(Castle):
     def __init__(self, *args, **kwargs):
         self.images = CastleLvl2.images
         super(CastleLvl2, self).__init__(*args, **kwargs)
-        self.total_hp = self.hp = 400
+        self.total_hp = self.hp = 250
 
 class CastleLvl3(Castle):
     images = {
@@ -239,13 +241,13 @@ class CastleLvl3(Castle):
         [pyglet.image.load('images/castle/idle/etat2.png')]
         ],
         Dying : [
-        [pyglet.image.load('images/castle/dying/château3_{}.png'.format(p)) for p in xrange(4)]
+        [pyglet.image.load('images/castle/dying/château3_{}.png'.format(p))] for p in xrange(4)
         ],
          }
 
     def __init__(self, *args, **kwargs):
         self.images = CastleLvl3.images
-        self.total_hp = self.hp = 1000
+        self.total_hp = self.hp = 400
         super(CastleLvl3, self).__init__(*args, **kwargs)
 
 class Monster(Creature):
