@@ -76,6 +76,8 @@ class Creature(Element):
 
     def attack_finished(self):
         for n in self.game.grid.neighbours(self):
+            if not isinstance(n, Creature):
+                continue
             self.attack(n)
 
         self.state = Idle(self)
@@ -92,30 +94,27 @@ class StillObject(Element):
 #SubSubClass
 class Character(Creature):
 
+    images = {
+        Idle: [
+        [pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
+        ],
+        Moving : [
+        [pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
+        ],
+        Dying : [
+        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        ],
+        Attacking : [
+        [pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
+        ]
+         }
 
-	images = {
+    def __init__(self, *args, **kwargs):
+        self.hp = 20
+        self.att = 5
+        self.images = Character.images
 
-			Idle: [
-			[pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
-			],
-			Moving : [
-			[pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
-			],
-			Attacking : [
-			[pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'left','bottom'] for f in range(4) 
-			],[pyglet.image.load('images/char/attacking/{}_top.png'.format(f))  for f in range(2)]
-			]
-			 }
-
-	def __init__(self, *args, **kwargs):
-		self.hp = 20
-		self.att = 5
-		self.images = Character.images
-
-		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
+        super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
 
 
@@ -142,8 +141,6 @@ class Castle(Creature):
         pass
 
 
-
-
 class Monster(Creature):
     images = None
 
@@ -152,7 +149,7 @@ class Monster(Creature):
         super(Monster, self).attack_finished()
 
         for n in self.game.grid.neighbours(self):
-            if isinstance(n, Character) or isinstance(n, Castle):
+            if issubclass(n.__class__, Creature):
                 self.state = Attacking(self)
                 return
 
@@ -175,7 +172,7 @@ class Monster(Creature):
         neighbours = self.game.grid.neighbours(self)
         for n in neighbours:
             if isinstance(n, Castle) or isinstance(n, Character):
-                self.state = Attacking(self,n)
+                self.state = Attacking(self)
                 return
 
 class SeaMonster(Monster):

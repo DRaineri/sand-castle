@@ -2,23 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import pyglet
-from grid import Grid
-
-
-
-
-from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
-
-
 
 from pyglet.window import key
-
 from crafting import Screen_craft
 
-import config
 import random
-from state import Moving, Idle, Attacking,Dying
 from math import radians, atan2
+
+import config
+from grid import Grid
+from state import Moving, Idle, Attacking, Dying
+from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
 
 class GameWindow(pyglet.window.Window):
 
@@ -48,29 +42,18 @@ class GameWindow(pyglet.window.Window):
         self.elements = []
 
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
-        
-        self.foam = Foam(self,-50,-300)
+
 
         self.elements.append(self.character)
 
-        self.addSeaMonster()
-        self.addSeaMonster()
-        self.addJungleMonster()
 
-
-        self.elements.append(Chest(self,750,0))
-
-
-
-
-        self.screen_craft = Screen_craft(self)
-
+        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         self.elements.append(self.castle)
+        
+        self.foam = Foam(self,-50,-300)
+        self.elements.append(Chest(self,750,0))
     
-
         self.crafting_on = False
-
 
         # Setting an update frequency of 60hz
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
@@ -148,17 +131,9 @@ class GameWindow(pyglet.window.Window):
         self.character.angle = atan2(y - c_y, x - c_x)
 
 
-
     def on_mouse_press(self, x, y, button, modifiers): 
-        if button == pyglet.window.mouse.LEFT:
-            neighboors = self.grid.neighbours(self.character)
-            for el in neighboors:
-
-                if (isinstance(el, SeaMonster)) or (isinstance(el, JungleMonster)):
-                    # TODO : Change this by switching the state to attacking
-                    self.character.attack(el)
-
-                    return
+        if button == pyglet.window.mouse.LEFT and not isinstance(self.character.state, Dying) and not isinstance(self.character.state, Attacking):
+            self.character.state = Attacking(self.character)
         elif button == pyglet.window.mouse.RIGHT:
             cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
             if cell.element and cell.element in self.grid.neighbours(self.character):
@@ -195,14 +170,9 @@ class GameWindow(pyglet.window.Window):
             pyglet.clock.schedule_interval(self.update, 1.0 / 60)
             pyglet.clock.schedule_interval(self.addSeaMonster, 5)
             pyglet.clock.schedule_interval(self.addJungleMonster, 5)
-
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
-
-      
-
-
-
+    
 
     def on_key_release(self, symbol, modifiers):
         movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
