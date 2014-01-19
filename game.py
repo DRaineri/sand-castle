@@ -14,13 +14,19 @@ from grid import Grid
 from state import Moving, Idle, Attacking, Dying
 from elements import Character, Monster, CastleLvl1, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
 
+def draw_rect(x1, y1, x2, y2):
+    batch = pyglet.graphics.Batch()
+    vertex_list = batch.add(4, pyglet.gl.GL_QUADS, None,
+        ('v2i', [x1, y1, x2, y1, x2, y2, x1, y2]),
+        ('c4B', [200, 200, 220, 255] * 4)
+    )
+    batch.draw()
+
 class GameWindow(pyglet.window.Window):
 
     def __init__(self, *args, **kwargs):
         super(GameWindow, self).__init__(*args, **kwargs)
 
-        self.width, self.height = args[:2]
-        
         # Keys handlers
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
@@ -50,10 +56,18 @@ class GameWindow(pyglet.window.Window):
         self.elements = []
         self.castle = CastleLvl1(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
 
+<<<<<<< HEAD
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.screen_craft = ScreenCraft(self)
 
+=======
+        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+        self.elements.append(self.castle)
+>>>>>>> 4d308e96e96bd7425400b315f8100b0c20582290
 
+       
+        self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
+        self.elements.append(self.character)
 
 
         self.addSeaMonster()
@@ -61,18 +75,16 @@ class GameWindow(pyglet.window.Window):
         self.addJungleMonster()
 
         self.elements.append(Chest(self,750,0))
-        self.elements.append(self.character)
 
-
-        self.elements.append(self.castle)
         
         self.foam = Foam(self,-50,-300)
         self.forest = Forest(self,self.width-100,0)
-        self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
         self.paused = False
         self.game_over = False
+
+        self.screen_craft = ScreenCraft(self)
 
         # Setting an update frequency of 60hz
         self.schedule_tasks()
@@ -157,12 +169,20 @@ class GameWindow(pyglet.window.Window):
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()
 
+        # XP bar
+        lvl_label = pyglet.text.Label(text="XP {} / 100 - LEVEL {}".format(self.character.xp, self.character.lvl), font_name="Ubuntu", bold=True, font_size=14,
+                                      x=20, y=self.height - 10, anchor_x='left', anchor_y='top')
+        lvl_label.draw()
+
+        draw_rect(100, self.height - 10, 200, self.height - 10)
+
         if self.crafting_on:
             self.screen_craft.draw()
 
         if self.game_over:
             self.overlay.draw()
             self.game_over_txt.draw()
+            #pyglet.resource.sound.
             score_label = pyglet.text.Label(text="Your score: {}".format(self.score), font_name="Ubuntu", bold=True, font_size=40,
                                x=self.width / 2, y=self.height/2 - 70, anchor_x='center', anchor_y='center')
             score_label.draw()
@@ -255,8 +275,8 @@ class GameWindow(pyglet.window.Window):
 
 if __name__ == '__main__':
     g = GameWindow(1600, 800)
-    # music = pyglet.resource.media('test.mp3')
-    # music.play()
+    music = pyglet.resource.media('test.mp3')
+    music.play()
 
 
     # Running the app
