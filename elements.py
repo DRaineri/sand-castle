@@ -116,7 +116,6 @@ class Castle(Creature):
 	def interact(self, character):
 		print "magicCastle !!!"
 		self.game.launch_crafting()
-		pass
 
 
 
