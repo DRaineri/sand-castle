@@ -4,6 +4,7 @@
 import pyglet
 from state import Idle, Moving, Attacking,Dying
 import config
+from math import cos 
 
 from math import radians, atan2
 
@@ -173,6 +174,28 @@ class Chest(StillObject):
 	def interact(self, character):
 		character.game.ruby += 1
 
+class Foam(StillObject):
+	images = {
+
+			Idle: [
+			[pyglet.image.load('images/foam/idle/idle.png')]
+			]
+			 }
+
+	def __init__(self, *args, **kwargs):
+		self.images = Foam.images
+		super(Foam, self).__init__(*args, **kwargs)
+		self.angle = 0.0
+		self.x0 = self.x
+		self.tick=0
+
+
+	def update(self, dt):
+		super(Foam,self).update(dt)
+		self.tick += 1
+		dx = (cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4)*0.3
+		self.x = self.x0 - dx
+		
 if __name__ == '__main__':
 	pass
 

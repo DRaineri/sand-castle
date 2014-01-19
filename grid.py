@@ -134,8 +134,7 @@ class SeaBorder(Cell):
 
     def update(self):
         self.tick += 1
-        dx = cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4
-        print dx
+        dx = (cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4)*0.3
         self.foreground = pyglet.sprite.Sprite(self.foreground.image,self.x+dx,self.y)
 
 

@@ -4,7 +4,7 @@
 import pyglet
 from grid import Grid
 
-from elements import Character, Monster, Castle, Chest
+from elements import Character, Monster, Castle, Chest, Foam
 
 from pyglet.window import key
 
@@ -39,10 +39,11 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
 
-        self.character = Character(self, 10, 0)
+        self.character = Character(self, (self.width)/2-(1.5*config.CELL_SIZE)-10, (self.height)/2-10)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
-        
+        self.foam = Foam(self,50,-300)
+
         self.elements.append(self.character)
         self.addSeaMonster()
         self.addSeaMonster()
@@ -70,6 +71,7 @@ class GameWindow(pyglet.window.Window):
 
         # Updating the element in grids
         self.grid.update_elements(self.elements)
+        self.foam.update(dt)
 
     def on_draw(self):
         self.background.draw()
@@ -79,7 +81,10 @@ class GameWindow(pyglet.window.Window):
         # Drawing all elements
         for element in self.elements:
             element.draw()
+        
         self.grid.draw_foreground()
+        self.foam.draw()
+
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
