@@ -49,8 +49,7 @@ class Element(object):
 	def collision(self):
 		self.state = Idle(self)
 
-	def target_missed(self):		
-		neighbours = self.game.grid.neighbours(self)
+	def target_missed(self,target):		
 		self.state = Moving(self, self.angle)
 
 
@@ -67,7 +66,6 @@ class Creature(Element):
 		super(Creature, self).__init__(*args, **kwargs)
 
 		self.hp = 10
-		self.target=None
 		self.angle = 0.0
 		self.speed = 500
 
@@ -147,8 +145,10 @@ class Monster(Creature):
 			
 			 }
 
-	def target_missed(self):
-		self.state = Moving(self, self.getAngle())
+	def target_missed(self,target):
+		neighbours = self.game.grid.neighbours(self)
+		if not target in neighbours:
+			self.state = Moving(self, self.getAngle())
  
 	def getAngle(self):
 		c_x, c_y = self.game.castle.x, self.game.castle.y
