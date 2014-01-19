@@ -14,13 +14,19 @@ from grid import Grid
 from state import Moving, Idle, Attacking, Dying
 from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
 
+def draw_rect(x1, y1, x2, y2):
+    batch = pyglet.graphics.Batch()
+    vertex_list = batch.add(4, pyglet.gl.GL_QUADS, None,
+        ('v2i', [x1, y1, x2, y1, x2, y2, x1, y2]),
+        ('c4B', [200, 200, 220, 255] * 4)
+    )
+    batch.draw()
+
 class GameWindow(pyglet.window.Window):
 
     def __init__(self, *args, **kwargs):
         super(GameWindow, self).__init__(*args, **kwargs)
 
-        self.width, self.height = args[:2]
-        
         # Keys handlers
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
@@ -155,6 +161,13 @@ class GameWindow(pyglet.window.Window):
         header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()
+
+        # XP bar
+        lvl_label = pyglet.text.Label(text="XP {} / 100 - LEVEL {}".format(self.character.xp, self.character.lvl), font_name="Ubuntu", bold=True, font_size=14,
+                                      x=20, y=self.height - 10, anchor_x='left', anchor_y='top')
+        lvl_label.draw()
+
+        draw_rect(100, self.height - 10, 200, self.height - 10)
 
         if self.crafting_on:
             self.screen_craft.draw()

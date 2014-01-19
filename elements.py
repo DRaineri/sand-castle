@@ -119,6 +119,9 @@ class Character(Creature):
          }
 
     def __init__(self, *args, **kwargs):
+
+        self.xp = 50
+        self.lvl = 2
         self.total_hp = self.hp = 20
         self.att = 5
         self.images = Character.images
