@@ -47,6 +47,7 @@ class GameWindow(pyglet.window.Window):
 
         # Graphical objects
         self.elements = []
+
         self.castle = CastleLvl1(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         self.elements.append(self.castle)
 
@@ -84,8 +85,8 @@ class GameWindow(pyglet.window.Window):
     @game_over.setter
     def game_over(self, value):
         self._game_over = value
-        if value == True:
-            self.unschedule_tasks()
+        if self.game_over:
+            self.final_score = self.score
     
 
     def schedule_tasks(self):
@@ -135,8 +136,7 @@ class GameWindow(pyglet.window.Window):
         if not any(isinstance(element,Chest) for element in self.elements) :
             chest = Chest(self, random.randint(0,self.width-50), random.randint(0,self.height-50))
             self.elements.append(chest)
-        else :
-            print 'Chest already on map'
+
 
 
     def update(self, dt):
@@ -180,7 +180,7 @@ class GameWindow(pyglet.window.Window):
             self.overlay.draw()
             self.game_over_txt.draw()
             #pyglet.resource.sound.
-            score_label = pyglet.text.Label(text="Your score: {}".format(self.score), font_name="Ubuntu", bold=True, font_size=40,
+            score_label = pyglet.text.Label(text="Your score: {}".format(self.final_score), font_name="Ubuntu", bold=True, font_size=40,
                                x=self.width / 2, y=self.height/2 - 70, anchor_x='center', anchor_y='center')
             score_label.draw()
 
@@ -239,14 +239,13 @@ class GameWindow(pyglet.window.Window):
         elif symbol in {pyglet.window.key.LEFT, pyglet.window.key.Q}:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
-
         elif symbol == pyglet.window.key.P and not self.paused:
             self.unschedule_tasks()
             self.paused = True
         elif symbol == pyglet.window.key.P and self.paused:
             self.schedule_tasks()
             self.paused = False
-        elif symbol == pyglet.window.key.Q:
+        elif symbol == pyglet.window.key.A:
             self.leave_crafting()
         elif symbol == pyglet.window.key.ESCAPE:
             m = menu.MenuWindow(1600, 800)
