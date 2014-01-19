@@ -63,10 +63,6 @@ class Element(object):
     def is_collidable(self):
         return True
 
-    def target_missed(self,target):     
-        self.state = Moving(self, self.angle)
-
-
 
 #SubClass
 class Creature(Element):
@@ -78,10 +74,16 @@ class Creature(Element):
         self.angle = 0.0
         self.speed = 500
 
+    def attack_finished(self):
+        for n in self.game.grid.neighbours(self):
+            self.attack(n)
+
+        self.state = Idle(self)
+
     def attack(self, element):
         element.hp -= self.att
-        if element.hp<=0:
-            element.state=Dying(element,1)
+        if element.hp <= 0:
+            element.state = Dying(element)
 
 class StillObject(Element):
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class StillObject(Element):
 
 #SubSubClass
 class Character(Creature):
+
 
 	images = {
 
@@ -115,6 +118,7 @@ class Character(Creature):
 		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
 
+
 class Castle(Creature):
     images = {
 
@@ -122,7 +126,7 @@ class Castle(Creature):
             [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
             ],
             Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
             ],
              }
     def __init__(self, *args, **kwargs):
@@ -139,78 +143,83 @@ class Castle(Creature):
 
 
 class Monster(Creature):
+    images = None
 
-	images = None
 
-	def target_missed(self,target):
-		neighbours=  self.game.grid.neighbours(self)
-		if not target in neighbours:
-			self.state= Moving(self,self.getAngle())
- 
-	def getAngle(self):
-		c_x, c_y = self.game.castle.x, self.game.castle.y
-		offset = atan2(c_y - self.y , c_x -self.x)
-		return offset
+    def attack_finished(self):
+        super(Monster, self).attack_finished()
 
-	def __init__(self, *args, **kwargs):
-		
-		self.hp = 30
-		self.att = 2
+        for n in self.game.grid.neighbours(self):
+            if isinstance(n, Character) or isinstance(n, Castle):
+                self.state = Attacking(self)
+                return
 
-		super(Monster, self).__init__(*args, **kwargs)
-		self.speed = 100
+        self.state = Moving(self, self.getAngle())
 
-	def collision(self):
-		neighbours = self.game.grid.neighbours(self)
-		for n in neighbours:
-			if isinstance(n, Castle) or isinstance(n, Character):
-				self.state = Attacking(self,n)
-				return
+    def getAngle(self):
+        c_x, c_y = self.game.castle.x, self.game.castle.y
+        offset = atan2(c_y - self.y , c_x -self.x)
+        return offset
 
+    def __init__(self, *args, **kwargs):
+        
+        self.hp = 30
+        self.att = 2
+
+        super(Monster, self).__init__(*args, **kwargs)
+        self.speed = 100
+
+    def collision(self):
+        neighbours = self.game.grid.neighbours(self)
+        for n in neighbours:
+            if isinstance(n, Castle) or isinstance(n, Character):
+                self.state = Attacking(self,n)
+                return
 
 class SeaMonster(Monster):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/monster/seamonster/idle/0_right.png')]
-			],
-			Moving : [
-			[pyglet.image.load('images/monster/seamonster/moving/{}_right.png'.format(f))] for f in range(4) 
-			],
-			Attacking : [
-			[pyglet.image.load('images/monster/seamonster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/monster/seamonster/dying/0_{}.png'.format(p)) for p in ['death']]
-			],
-			
-			 }
+            Idle: [
+            [pyglet.image.load('images/monster/seamonster/idle/0_right.png')]
+            ],
+            Moving : [
+            [pyglet.image.load('images/monster/seamonster/moving/{}_right.png'.format(f))] for f in range(4) 
+            ],
+            Attacking : [
+            [pyglet.image.load('images/monster/seamonster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
+            ],
+            Dying : [
+            [pyglet.image.load('images/monster/seamonster/dying/0_{}.png'.format(p)) for p in ['death']]
+            ],
+            
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.images = SeaMonster.images
-		super(SeaMonster,self).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        self.images = SeaMonster.images
+        super(SeaMonster,self).__init__(*args,**kwargs)
 
 class JungleMonster(Monster):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/monster/junglemonster/idle/0_left.png')]
-			],
-			Moving : [
-			[pyglet.image.load('images/monster/junglemonster/moving/{}_left.png'.format(f))] for f in range(4) 
-			],
-			Attacking : [
-			[pyglet.image.load('images/monster/junglemonster/attacking/{}_{}.png'.format(f,p)) for p in ['left']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/monster/junglemonster/dying/0_{}.png'.format(p)) for p in ['death']]
-			],
-			
-			 }
+            Idle: [
+            [pyglet.image.load('images/monster/junglemonster/idle/0_left.png')]
+            ],
+            Moving : [
+            [pyglet.image.load('images/monster/junglemonster/moving/{}_left.png'.format(f))] for f in range(4) 
+            ],
+            Attacking : [
+            [pyglet.image.load('images/monster/junglemonster/attacking/{}_{}.png'.format(f,p)) for p in ['left']] for f in range(4) 
+            ],
+            Dying : [
+            [pyglet.image.load('images/monster/junglemonster/dying/0_{}.png'.format(p)) for p in ['death']]
+            ],
+            
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.images = JungleMonster.images
-		super(JungleMonster,self).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        self.images = JungleMonster.images
+        super(JungleMonster,self).__init__(*args,**kwargs)
+
 
 class Chest(StillObject):
     images = {
