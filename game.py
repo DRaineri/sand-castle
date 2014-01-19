@@ -13,14 +13,7 @@ import config
 from grid import Grid
 from state import Moving, Idle, Attacking, Dying
 from elements import Character, Monster, CastleLvl1, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
-
-def draw_rect(x1, y1, x2, y2):
-    batch = pyglet.graphics.Batch()
-    vertex_list = batch.add(4, pyglet.gl.GL_QUADS, None,
-        ('v2i', [x1, y1, x2, y1, x2, y2, x1, y2]),
-        ('c4B', [200, 200, 220, 255] * 4)
-    )
-    batch.draw()
+import menu
 
 class GameWindow(pyglet.window.Window):
 
@@ -179,7 +172,6 @@ class GameWindow(pyglet.window.Window):
                                       x=20, y=self.height - 10, anchor_x='left', anchor_y='top')
         lvl_label.draw()
 
-        draw_rect(100, self.height - 10, 200, self.height - 10)
 
         if self.crafting_on:
             self.screen_craft.draw()
@@ -234,16 +226,17 @@ class GameWindow(pyglet.window.Window):
         diff = 40
         offset = 0
 
-        if symbol == pyglet.window.key.UP:
+
+        if symbol in {pyglet.window.key.UP, pyglet.window.key.Z}:
             offset= radians(90)
             self.character.state=Moving(self.character, offset)
-        elif symbol == pyglet.window.key.DOWN:
+        elif symbol in {pyglet.window.key.DOWN, pyglet.window.key.S}:
             offset = radians(-90)
             self.character.state=Moving(self.character, offset)
-        elif symbol == pyglet.window.key.RIGHT:
+        elif symbol in {pyglet.window.key.RIGHT, pyglet.window.key.D}:
             offset = radians(0)
             self.character.state=Moving(self.character, offset)
-        elif symbol == pyglet.window.key.LEFT:
+        elif symbol in {pyglet.window.key.LEFT, pyglet.window.key.Q}:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
 
@@ -256,10 +249,13 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
         elif symbol == pyglet.window.key.ESCAPE:
+            m = menu.MenuWindow(1600, 800)
             self.close()
-
+            
     def on_key_release(self, symbol, modifiers):
-        movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
+        movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT,
+        pyglet.window.key.LEFT, pyglet.window.key.Q, pyglet.window.key.S, pyglet.window.key.D,
+        pyglet.window.key.Z} 
         
         if symbol in movement_keys and not any(self.keys[s] for s in movement_keys):
             self.character.state = Idle(self.character)

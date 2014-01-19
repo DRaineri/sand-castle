@@ -1,5 +1,5 @@
 import pyglet
-from game import GameWindow
+import game 
 
 def draw_with_shadow(label, s_label=None):
     bak_color = label.color
@@ -68,7 +68,8 @@ class MenuWindow(pyglet.window.Window):
             self.selected = (self.selected - 1) % len(self.labels)
         elif symbol == pyglet.window.key.ENTER:
             if self.labels[self.selected] == self.new_game:
-                w = GameWindow(1600, 800)
+                w = game.GameWindow(1600, 800)
+                self.close()
             elif self.labels[self.selected] == self.exit:
                 self.close()
 

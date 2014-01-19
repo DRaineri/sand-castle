@@ -96,6 +96,16 @@ class Creature(Element):
         if element.hp <= 0:
             element.die()
 
+    def draw(self):
+        super(Creature, self).draw()
+        if 0 <= self.hp < self.total_hp:
+            hp_txt = '{}/{}'.format(self.hp, self.total_hp)
+            hp_label = pyglet.text.Label(hp_txt, x=self.x + config.CELL_SIZE, y=self.y + 2 * config.CELL_SIZE,
+                                         font_name="Ubuntu", bold=True)
+            hp_label.color = (111, 80, 64, 255)
+            hp_label.draw()
+
+
 class StillObject(Element):
     def __init__(self, *args, **kwargs):
         super(StillObject, self).__init__(*args, **kwargs)
@@ -151,6 +161,12 @@ class Character(Creature):
 
     @lvl.setter
     def lvl(self, value):
+        
+        self.total_hp = int(self.total_hp * 1.2)
+        self.hp = self.total_hp
+
+        self.att = int(self.att * 1.3)
+
         if value == 2:
             self.game.elements.remove(self.game.castle)
             self.game.castle = CastleLvl2(self.game,(self.game.width)/2-(1.5*config.CELL_SIZE), (self.game.height)/2, 2,2)
@@ -194,7 +210,7 @@ class CastleLvl1(Castle):
         [pyglet.image.load('images/castle/idle/etat0.png')]
         ],
         Dying : [
-        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        [pyglet.image.load('images/castle/dying/château1_{}.png'.format(p)) for p in xrange(4)]
         ],
      }
 
@@ -209,8 +225,8 @@ class CastleLvl2(Castle):
             [pyglet.image.load('images/castle/idle/etat1.png')]
             ],
             Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
-            ],
+            [pyglet.image.load('images/castle/dying/château2_{}.png'.format(p))]  for p in xrange(4)
+            ]
      }
     def __init__(self, *args, **kwargs):
         self.images = CastleLvl2.images
@@ -223,7 +239,7 @@ class CastleLvl3(Castle):
         [pyglet.image.load('images/castle/idle/etat2.png')]
         ],
         Dying : [
-        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        [pyglet.image.load('images/castle/dying/château3_{}.png'.format(p)) for p in xrange(4)]
         ],
          }
 
