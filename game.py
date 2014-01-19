@@ -12,7 +12,7 @@ from math import radians, atan2
 import config
 from grid import Grid
 from state import Moving, Idle, Attacking, Dying
-from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
+from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
 
 class GameWindow(pyglet.window.Window):
 
@@ -51,6 +51,7 @@ class GameWindow(pyglet.window.Window):
         self.elements.append(self.castle)
         
         self.foam = Foam(self,-50,-300)
+        self.forest = Forest(self,self.width-100,0)
         self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
@@ -109,6 +110,7 @@ class GameWindow(pyglet.window.Window):
         
         self.grid.draw_foreground()
         self.foam.draw()
+        self.forest.draw()
 
         # Title
         t_x = self.width - 20

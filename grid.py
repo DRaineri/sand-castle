@@ -112,7 +112,7 @@ class Jungle(Cell):
     def __init__(self, *args, **kwargs):
         self.images = Jungle.back_images
         super(Jungle, self).__init__(*args, **kwargs)
-        self.foreground =  pyglet.sprite.Sprite(random.choice(Jungle.front_image),self.x,self.y)
+        #self.foreground =  pyglet.sprite.Sprite(random.choice(Jungle.front_image),self.x,self.y)
 
 class Sea(Cell):
     
