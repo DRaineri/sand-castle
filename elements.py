@@ -113,6 +113,9 @@ class Castle(Creature):
 		self.hp = 100
 		super(Castle, self).__init__(*args, **kwargs)
 
+	def interact(self, character):
+		pass
+
 
 
 class Monster(Creature):

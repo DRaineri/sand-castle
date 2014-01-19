@@ -132,6 +132,10 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.LEFT:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
+        elif symbol == pyglet.window.key.P:
+            pyglet.clock.unschedule(self.update)
+        elif symbol == pyglet.window.key.G:
+            pyglet.clock.schedule_interval(self.update, 1.0 / 60)
 
 
     def on_key_release(self, symbol, modifiers):
