@@ -138,7 +138,6 @@ class Monster(Creature):
 
 	def collision(self):
 		neighbours = self.game.grid.neighbours(self)
-		print neighbours
 		for n in neighbours:
 			if isinstance(n, Castle) or isinstance(n, Character):
 				self.state = Attacking(self,n)

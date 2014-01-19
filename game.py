@@ -54,7 +54,7 @@ class GameWindow(pyglet.window.Window):
 
 
     def addSeaMonster(self, dt=0):
-        monster = Monster(self, 0, random.randint(0,self.height), 1, 2)
+        monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
 
         self.elements.append(monster)
         monster.setAngle()
@@ -94,11 +94,16 @@ class GameWindow(pyglet.window.Window):
         self.character.angle = atan2(y - c_y, x - c_x)
 
 
-    def on_mouse_press(self, x, y, button, modifiers):
+    def on_mouse_press(self, x, y, button, modifiers): 
         if button == pyglet.window.mouse.LEFT:
-            for el in self.grid.neighbours(self.character):
+            neighboors = self.grid.neighbours(self.character)
+            print 'char neigh =  ', neighboors
+            for el in neighboors:
                 if isinstance(el, Monster):
+                    # TODO : Change this by switching the state to attacking
                     self.character.attack(el)
+                    print el.hp
+                    return
         elif button == pyglet.window.mouse.RIGHT:
             pass
             #wait release
@@ -137,9 +142,9 @@ class GameWindow(pyglet.window.Window):
             self.character.state = Idle(self.character)
 
 if __name__ == '__main__':
-	g = GameWindow(1280, 800)
-	music = pyglet.resource.media('test.mp3')
-	music.play()
+    g = GameWindow(1280, 800)
+    # music = pyglet.resource.media('test.mp3')
+    # music.play()
 
     # Running the app
     pyglet.app.run()
