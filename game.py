@@ -47,7 +47,7 @@ class GameWindow(pyglet.window.Window):
 
         # Graphical objects
         self.elements = []
-        
+
         self.castle = CastleLvl1(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         self.elements.append(self.castle)
 
@@ -136,8 +136,7 @@ class GameWindow(pyglet.window.Window):
         if not any(isinstance(element,Chest) for element in self.elements) :
             chest = Chest(self, random.randint(0,self.width-50), random.randint(0,self.height-50))
             self.elements.append(chest)
-        else :
-            print 'Chest already on map'
+
 
 
     def update(self, dt):
@@ -240,14 +239,13 @@ class GameWindow(pyglet.window.Window):
         elif symbol in {pyglet.window.key.LEFT, pyglet.window.key.Q}:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
-
         elif symbol == pyglet.window.key.P and not self.paused:
             self.unschedule_tasks()
             self.paused = True
         elif symbol == pyglet.window.key.P and self.paused:
             self.schedule_tasks()
             self.paused = False
-        elif symbol == pyglet.window.key.Q:
+        elif symbol == pyglet.window.key.A:
             self.leave_crafting()
         elif symbol == pyglet.window.key.ESCAPE:
             m = menu.MenuWindow(1600, 800)

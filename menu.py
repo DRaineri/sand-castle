@@ -4,7 +4,9 @@ import game
 def draw_with_shadow(label, s_label=None):
     bak_color = label.color
     if label == s_label:
-        label.color = (80, 80, 150, 255)
+        label.color = (200, 130, 130, 255)
+    else:
+        label.color = (150, 80, 80, 255)
 
     label.draw()
     label.x -= 1
