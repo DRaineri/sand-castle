@@ -125,6 +125,10 @@ class Character(Creature):
     def attackable(self, e):
         return isinstance(e, Monster)
 
+    def die(self):
+        super(Character, self).die()
+        self.game.game_over = True
+
 class Castle(Creature):
     images = {
 
@@ -146,6 +150,10 @@ class Castle(Creature):
        
         self.game.launch_crafting()
         pass
+
+    def die(self):
+        super(Castle, self).die()
+        self.game.game_over = True
 
 
 class Monster(Creature):
