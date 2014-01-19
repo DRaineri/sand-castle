@@ -47,13 +47,15 @@ class GameWindow(pyglet.window.Window):
         self.elements = []
 
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
+
+
         self.elements.append(self.character)
 
 
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         self.elements.append(self.castle)
         
-        self.foam = Foam(self,50,-300)
+        self.foam = Foam(self,-50,-300)
         self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
@@ -136,8 +138,6 @@ class GameWindow(pyglet.window.Window):
         if self.paused:
             self.paused_over.draw()
             self.paused_txt.draw()
-
-
 
 
     def on_mouse_motion(self, x, y, dx, dy): 
