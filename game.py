@@ -75,10 +75,11 @@ class GameWindow(pyglet.window.Window):
         self.background.draw()
         self.grid.draw_background()
 
+
         # Drawing all elements
         for element in self.elements:
             element.draw()
-
+        self.grid.draw_foreground()
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
@@ -133,8 +134,10 @@ class GameWindow(pyglet.window.Window):
             self.character.state=Moving(self.character, offset)
         elif symbol == pyglet.window.key.P:
             pyglet.clock.unschedule(self.update)
+            pyglet.clock.unschedule(self.addSeaMonster)
         elif symbol == pyglet.window.key.G:
             pyglet.clock.schedule_interval(self.update, 1.0 / 60)
+            pyglet.clock.schedule_interval(self.addSeaMonster, 5)
 
 
     def on_key_release(self, symbol, modifiers):
@@ -145,9 +148,10 @@ class GameWindow(pyglet.window.Window):
             self.character.state = Idle(self.character)
 
 if __name__ == '__main__':
-    g = GameWindow(1280, 800)
+    g = GameWindow(1900, 1000)
     # music = pyglet.resource.media('test.mp3')
     # music.play()
+
 
     # Running the app
     pyglet.app.run()
