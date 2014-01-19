@@ -185,8 +185,7 @@ class GameWindow(pyglet.window.Window):
     def on_mouse_press(self, x, y, button, modifiers): 
         if self.crafting_on:
             if button == pyglet.window.mouse.LEFT:
-                print "ok" #self.screen_craft.get_sub_craft(x,y)
-            print "hola"
+                pass
         else:
             if button == pyglet.window.mouse.LEFT and not isinstance(self.character.state, Dying) and not isinstance(self.character.state, Attacking):
                 self.character.state = Attacking(self.character)
