@@ -10,7 +10,7 @@ from pyglet.window import key
 
 import config
 import random
-from state import Moving, Idle, Attacking
+from state import Moving, Idle, Attacking,Dying
 from math import radians, atan2
 
 class GameWindow(pyglet.window.Window):

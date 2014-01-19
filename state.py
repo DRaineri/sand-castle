@@ -79,6 +79,7 @@ class Attacking(State):
 
 	def update(self, dt):
 		super(Attacking,self).update(dt)
+		self.element.attack(self.target)
 		neighbours = self.element.game.grid.neighbours(self.element)
 
 		for n in neighbours:
@@ -88,4 +89,23 @@ class Attacking(State):
 
 
 
+class Dying(State):
+	"""docstring for Dying"""
+	def __init__(self, element, arg):
+		super(Dying,self).__init__(element)
+		self.images = self.element.images[Dying]
 
+	def update(self,dt):
+		super(Dying,self).update(dt)
+
+
+#class Damaging(object):
+#	"""docstring for Damaging"""
+#	def __init__(self,element arg):
+#		super(Damaging, self).__init__(element)
+#		self.images = self.element.images[Damaging]
+#
+#	def update(self,dt):
+#		super(Damaging,self).update(dt)
+
+		

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pyglet
-from state import Idle, Moving, Attacking
+from state import Idle, Moving, Attacking,Dying
 import config
 
 from math import radians, atan2
@@ -67,6 +67,8 @@ class Creature(Element):
 
 	def attack(self, element):
 		element.hp -= self.att
+		if element.hp<=0:
+			element.state=Dying(self,0)
 
 
 class StillObject(Element):
@@ -83,7 +85,9 @@ class Character(Creature):
 			Moving : [
 			[pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
 			],
-			
+			Dying : [
+			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+			],
 			 }
 
 	def __init__(self, *args, **kwargs):
@@ -98,10 +102,14 @@ class Castle(Creature):
 
 			Idle: [
 			[pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
-			]
+			],
+			Dying : [
+			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+			],
 			 }
 	def __init__(self, *args, **kwargs):
 		self.images = Castle.images
+		self.att=5
 		self.hp = 100
 		super(Castle, self).__init__(*args, **kwargs)
 
@@ -121,7 +129,10 @@ class Monster(Creature):
 			],
 			Attacking : [
 			[pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-			]
+			],
+			Dying : [
+			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+			],
 			
 			 }
 
