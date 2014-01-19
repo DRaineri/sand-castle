@@ -76,6 +76,8 @@ class Creature(Element):
 
     def attack_finished(self):
         for n in self.game.grid.neighbours(self):
+            if not isinstance(n, Creature):
+                continue
             self.attack(n)
 
         self.state = Idle(self)
@@ -91,21 +93,21 @@ class StillObject(Element):
 
 #SubSubClass
 class Character(Creature):
-    images = {
 
-            Idle: [
-            [pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
-            ],
-            Moving : [
-            [pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
-            ],
-            Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-            ],
-            Attacking : [
-            [pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
-            ]
-             }
+    images = {
+        Idle: [
+        [pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
+        ],
+        Moving : [
+        [pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
+        ],
+        Dying : [
+        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        ],
+        Attacking : [
+        [pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
+        ]
+         }
 
     def __init__(self, *args, **kwargs):
         self.hp = 20
@@ -114,6 +116,8 @@ class Character(Creature):
 
         super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
+
+
 class Castle(Creature):
     images = {
 
@@ -121,7 +125,7 @@ class Castle(Creature):
             [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
             ],
             Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
             ],
              }
     def __init__(self, *args, **kwargs):
@@ -130,17 +134,10 @@ class Castle(Creature):
         self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
 
-<<<<<<< HEAD
-	def interact(self, character):
-		print "magicCastle !!!"
-		self.game.launch_crafting()
-=======
     def interact(self, character):
         print "magicCastle !!!"
         self.game.launch_crafting()
         pass
->>>>>>> 6451231fd0bcbd06ac9783a09948ac7b605417e3
-
 
 
 class Monster(Creature):
@@ -151,7 +148,7 @@ class Monster(Creature):
         super(Monster, self).attack_finished()
 
         for n in self.game.grid.neighbours(self):
-            if isinstance(n, Character) or isinstance(n, Castle):
+            if issubclass(n.__class__, Creature):
                 self.state = Attacking(self)
                 return
 
@@ -174,7 +171,7 @@ class Monster(Creature):
         neighbours = self.game.grid.neighbours(self)
         for n in neighbours:
             if isinstance(n, Castle) or isinstance(n, Character):
-                self.state = Attacking(self,n)
+                self.state = Attacking(self)
                 return
 
 class SeaMonster(Monster):
@@ -190,7 +187,7 @@ class SeaMonster(Monster):
             [pyglet.image.load('images/monster/seamonster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
             ],
             Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            [pyglet.image.load('images/monster/seamonster/dying/0_{}.png'.format(p)) for p in ['death']]
             ],
             
              }
@@ -212,7 +209,7 @@ class JungleMonster(Monster):
             [pyglet.image.load('images/monster/junglemonster/attacking/{}_{}.png'.format(f,p)) for p in ['left']] for f in range(4) 
             ],
             Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            [pyglet.image.load('images/monster/junglemonster/dying/0_{}.png'.format(p)) for p in ['death']]
             ],
             
              }
@@ -220,6 +217,7 @@ class JungleMonster(Monster):
     def __init__(self, *args, **kwargs):
         self.images = JungleMonster.images
         super(JungleMonster,self).__init__(*args,**kwargs)
+
 
 class Chest(StillObject):
     images = {

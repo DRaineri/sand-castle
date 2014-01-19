@@ -12,6 +12,7 @@ class State(object):
 		self.element = element	
 		self.anim_delay = anim_delay
 
+
 	def update(self, dt):
 		self.t += dt
 
@@ -77,7 +78,6 @@ class Attacking(State):
 	def __init__(self, element, anim_delay=0.2):
 		super(Attacking, self).__init__(element, anim_delay=anim_delay)
 		self.images = self.element.images[Attacking]
-		print self.images
 
 	def update(self, dt):
 		super(Attacking, self).update(dt)
