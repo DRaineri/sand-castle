@@ -4,7 +4,7 @@
 import pyglet
 
 from pyglet.window import key
-from crafting import Screen_craft
+from crafting import ScreenCraft
 
 import random
 from math import radians, atan2
@@ -12,7 +12,7 @@ from math import radians, atan2
 import config
 from grid import Grid
 from state import Moving, Idle, Attacking, Dying
-from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
+from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
 
 class GameWindow(pyglet.window.Window):
 
@@ -52,13 +52,22 @@ class GameWindow(pyglet.window.Window):
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
 
 
+
+        self.addSeaMonster()
+        self.addSeaMonster()
+        self.addJungleMonster()
+
+        self.elements.append(Chest(self,750,0))
         self.elements.append(self.character)
 
+        self.screen_craft = ScreenCraft(self)
 
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+
         self.elements.append(self.castle)
         
         self.foam = Foam(self,-50,-300)
+        self.forest = Forest(self,self.width-100,0)
         self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
@@ -137,6 +146,7 @@ class GameWindow(pyglet.window.Window):
         
         self.grid.draw_foreground()
         self.foam.draw()
+        self.forest.draw()
 
         # Title
         t_x = self.width - 20
@@ -175,13 +185,19 @@ class GameWindow(pyglet.window.Window):
         self.character.angle = atan2(y - c_y, x - c_x)
 
 
+
     def on_mouse_press(self, x, y, button, modifiers): 
-        if button == pyglet.window.mouse.LEFT and not isinstance(self.character.state, Dying) and not isinstance(self.character.state, Attacking):
-            self.character.state = Attacking(self.character)
-        elif button == pyglet.window.mouse.RIGHT:
-            cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
-            if cell.element and cell.element in self.grid.neighbours(self.character):
-                cell.element.interact(self.character)
+        if self.crafting_on:
+            if button == pyglet.window.mouse.LEFT:
+                print "ok" #self.screen_craft.get_sub_craft(x,y)
+            print "hola"
+        else:
+            if button == pyglet.window.mouse.LEFT and not isinstance(self.character.state, Dying) and not isinstance(self.character.state, Attacking):
+                self.character.state = Attacking(self.character)
+            elif button == pyglet.window.mouse.RIGHT:
+                cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
+                if cell.element and cell.element in self.grid.neighbours(self.character):
+                    cell.element.interact(self.character)
 
             #wait release
 
@@ -206,6 +222,7 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.LEFT:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
+
         elif symbol == pyglet.window.key.P and not self.paused:
             self.unschedule_tasks()
             self.paused = True
@@ -227,6 +244,7 @@ class GameWindow(pyglet.window.Window):
         self.unschedule_tasks()
 
         self.crafting_on = True
+        #self.screen_craft.inventory.subList.append()
         self.screen_craft.run_crafting()
 
     def leave_crafting(self):

@@ -145,11 +145,8 @@ class Castle(Creature):
         self.total_hp = self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
 
-
     def interact(self, character):
-       
         self.game.launch_crafting()
-        pass
 
     def die(self):
         super(Castle, self).die()
@@ -325,5 +322,16 @@ class Foam(StillObject):
         dx = (cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4)*0.3
         self.x = self.x0 - dx
         
+class Forest(StillObject):
+    images = {
+
+            Idle: [
+            [pyglet.image.load('images/forest/idle/0_idle.png')]
+            ]
+             }
+
+    def __init__(self, *args, **kwargs):
+        self.images = Forest.images
+        super(Forest, self).__init__(*args, **kwargs)
 if __name__ == '__main__':
     pass
