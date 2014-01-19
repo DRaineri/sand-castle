@@ -65,6 +65,10 @@ class Creature(Element):
 		self.angle = 0.0
 		self.speed = 500
 
+	def attack(self, element):
+		element.hp -= self.att
+
+
 class StillObject(Element):
 	def __init__(self, *args, **kwargs):
 		super(StillObject, self).__init__(*args, **kwargs)
@@ -84,26 +88,10 @@ class Character(Creature):
 
 	def __init__(self, *args, **kwargs):
 		self.hp = 20
+		self.att = 5
 		self.images = Character.images
 
 		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
-
-	def attack(self):
-		#liste des cases du character
-		allPosCharacter = [(self.x//config.CELL_SIZE, self.y//config.CELL_SIZE),
-							 ((self.x + self.w)//config.CELL_SIZE, self.y//config.CELL_SIZE),
-							 (self.x //config.CELL_SIZE,(self.y + self.h)//config.CELL_SIZE),
-							 ((self.x + self.w)//config.CELL_SIZE,(self.y + self.h)//config.CELL_SIZE)]
-		allPosTarget = []
-		for i in range(self.x//config.CELL_SIZE - 1, self.x//config.CELL_SIZE + 2):
-			for j in range (self.y//config.CELL_SIZE - 1, self.y//config.CELL_SIZE + 2):
-				if not((i,j) in allPosCharacter):
-					allPosTarget.append((i,j))
-
-
-		posElement = (x/config.CELL_SIZE, y/config.CELL_SIZE)
-		self.state = Attacking(self)
-
 
 class Castle(Creature):
 	images = {
@@ -143,13 +131,13 @@ class Monster(Creature):
 	def __init__(self, *args, **kwargs):
 		self.images = Monster.images
 		self.hp = 30
+		self.att = 2
 
 		super(Monster, self).__init__(*args, **kwargs)
 		self.speed = 100
 
 	def collision(self):
 		neighbours = self.game.grid.neighbours(self)
-
 		for n in neighbours:
 			if isinstance(n, Castle) or isinstance(n, Character):
 				self.state = Attacking(self,n)

@@ -2,6 +2,8 @@ import random
 import config
 import pyglet
 
+from elements import Character
+
 def random_bg():
 	return random.choice([Sand, Jungle, Sea])
 
@@ -32,12 +34,17 @@ class Grid(object):
 
 	def neighbours(self, element):
 		neigh = []
-		b_x = int(element.x // config.CELL_SIZE - 1)
-		b_y = int(element.y // config.CELL_SIZE - 1)
+		b_x = int(element.x // config.CELL_SIZE) - 1
+		b_y = int(element.y // config.CELL_SIZE) - 1
 
-		for x in xrange(b_x, b_x + element.w + 1):
-			for y in xrange(b_y, b_y + element.h + 1):
-				if 0 <= x < self.w and 0 <= y < self.h and self.grid[y][x].element and self.grid[y][x].element != element:
+		for x in xrange(b_x, b_x + element.w + 2):
+			for y in xrange(b_y, b_y + element.h + 2):
+				valid_coords = 0 <= x < self.w and 0 <= y < self.h
+				if not valid_coords:
+					continue
+				el = self.grid[y][x].element
+				valid_neighbour = not el is None and el != element and not el in neigh
+				if valid_coords and valid_neighbour:
 					neigh.append(self.grid[y][x].element)
 
 		return neigh
