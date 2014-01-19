@@ -85,6 +85,9 @@ class Creature(Element):
 
         self.state = Idle(self)
 
+    def started_attack(self):
+    	pass
+
     def attackable(self, e):
         return isinstance(e, Creature)
 
@@ -119,8 +122,14 @@ class Character(Creature):
         self.total_hp = self.hp = 20
         self.att = 5
         self.images = Character.images
-
+        self.soundAttack = pyglet.resource.media('sound/attack.mp3',streaming = False)
         super(Character, self).__init__(*args, w=1, h=2, **kwargs)
+        
+    def started_attack(self):
+    	super(Character,self).started_attack()
+    	self.soundAttack.play()
+
+        
 
     def attackable(self, e):
         return isinstance(e, Monster)
@@ -212,6 +221,15 @@ class SeaMonster(Monster):
     def __init__(self, *args, **kwargs):
         self.images = SeaMonster.images
         super(SeaMonster,self).__init__(*args,**kwargs)
+       
+        self.soundAttack = pyglet.resource.media('sound/shark_niak.mp3',streaming = False)
+        self.soudPop = pyglet.resource.media('sound/shark_shout.mp3',streaming = False)
+        self.soudPop.play()
+
+    def started_attack(self):
+    	super(SeaMonster,self).started_attack()
+    	self.soundAttack.play()
+
 
     def die(self):
         super(SeaMonster, self).die()
@@ -239,7 +257,14 @@ class JungleMonster(Monster):
     def __init__(self, *args, **kwargs):
         self.images = JungleMonster.images
         super(JungleMonster,self).__init__(*args,**kwargs)
-
+    	self.soundAttack = pyglet.resource.media('sound/bear_chomp.mp3',streaming = False)
+        self.soudPop = pyglet.resource.media('sound/bear_shout.mp3',streaming = False)
+        self.soudPop.play()
+    
+    def started_attack(self):
+    	super(JungleMonster,self).started_attack()
+    	self.soundAttack.play()
+    
     def die(self):
         super(JungleMonster, self).die()
         self.game.bear_pelt += 1

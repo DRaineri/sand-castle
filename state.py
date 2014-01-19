@@ -78,7 +78,8 @@ class Attacking(State):
 	def __init__(self, element, anim_delay=0.1):
 		super(Attacking, self).__init__(element, anim_delay=anim_delay)
 		self.images = self.element.images[Attacking]
-
+		self.element.started_attack()
+		
 	def update(self, dt):
 		super(Attacking, self).update(dt)
 
