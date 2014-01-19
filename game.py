@@ -50,7 +50,6 @@ class GameWindow(pyglet.window.Window):
         self.foam = Foam(self,50,-300)
         self.elements.append(Chest(self,750,0))
     
-        #self.screen_craft = Screen_craft()
         self.crafting_on = False
 
         # Setting an update frequency of 60hz
@@ -138,6 +137,7 @@ class GameWindow(pyglet.window.Window):
                 cell.element.interact(self.character)
 
             #wait release
+
     def on_mouse_release(self, x, y, button, modifiers):
         pass
 
@@ -169,7 +169,7 @@ class GameWindow(pyglet.window.Window):
             pyglet.clock.schedule_interval(self.addJungleMonster, 5)
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
-
+    
 
     def on_key_release(self, symbol, modifiers):
         movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
