@@ -125,27 +125,32 @@ class Character(Creature):
     def attackable(self, e):
         return isinstance(e, Monster)
 
+    def die(self):
+        super(Character, self).die()
+        self.game.game_over = True
+
 class Castle(Creature):
     images = {
 
-            Idle: [
-            [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
-            ],
-            Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
-            ],
-             }
+        Idle: [
+        [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
+        ],
+        Dying : [
+        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        ],
+         }
     def __init__(self, *args, **kwargs):
         self.images = Castle.images
         self.att = 5
         self.total_hp = self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
 
-
     def interact(self, character):
-       
         self.game.launch_crafting()
-        pass
+
+    def die(self):
+        super(Castle, self).die()
+        self.game.game_over = True
 
 
 class Monster(Creature):
