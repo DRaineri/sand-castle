@@ -244,6 +244,10 @@ class Projectile(Creature):
             ],
             Moving: [
             [pyglet.image.load('images/projectile/idle/bomb.png')]
+            ],
+            Dying: [
+            [pyglet.image.load('images/projectile/explosion/explosion{}.png'.format(i))
+             for i in xrange(1, 5)]
             ]
     }
 
@@ -251,12 +255,17 @@ class Projectile(Creature):
         self.images = Projectile.images
         super(Projectile, self).__init__(*args, **kwargs)
 
+        self.att = 5
+
     def shoot(self, target):
         angle = self.diff_angle(target)
         self.state = Moving(self, angle)
 
     def collision(self):
-        pass
+        for n in self.game.grid.neighbours(self):
+            if isinstance(n, Monster):
+                self.attack(n)
+                self.state = Dying(self)
     
     def is_collidable(self):
         return False

@@ -75,7 +75,7 @@ class Moving(State):
 
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element, anim_delay=0.2):
+	def __init__(self, element, anim_delay=0.1):
 		super(Attacking, self).__init__(element, anim_delay=anim_delay)
 		self.images = self.element.images[Attacking]
 
