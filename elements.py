@@ -174,7 +174,7 @@ class Monster(Creature):
         self.att = 2
 
         super(Monster, self).__init__(*args, **kwargs)
-        self.speed = 100
+        self.speed = 50
 
 
     def attack_finished(self):

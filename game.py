@@ -175,6 +175,7 @@ class GameWindow(pyglet.window.Window):
         if self.game_over:
             self.overlay.draw()
             self.game_over_txt.draw()
+            #pyglet.resource.sound.
             score_label = pyglet.text.Label(text="Your score: {}".format(self.score), font_name="Ubuntu", bold=True, font_size=40,
                                x=self.width / 2, y=self.height/2 - 70, anchor_x='center', anchor_y='center')
             score_label.draw()
