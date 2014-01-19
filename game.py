@@ -5,7 +5,7 @@ import pyglet
 from grid import Grid
 
 
-from elements import Character, Monster, Castle, Chest, Projectile, Foam
+from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
 
 
 from pyglet.window import key

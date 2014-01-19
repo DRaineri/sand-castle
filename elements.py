@@ -91,31 +91,6 @@ class StillObject(Element):
 
 #SubSubClass
 class Character(Creature):
-<<<<<<< HEAD
-	images = {
-
-			Idle: [
-			[pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
-			],
-			Moving : [
-			[pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-			],
-			Attacking : [
-			[pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'left','bottom'] for f in range(4) 
-			],[pyglet.image.load('images/char/attacking/{}_top.png'.format(f))  for f in range(2)]
-			]
-			 }
-
-	def __init__(self, *args, **kwargs):
-		self.hp = 20
-		self.att = 5
-		self.images = Character.images
-
-		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
-=======
     images = {
 
             Idle: [
@@ -128,8 +103,9 @@ class Character(Creature):
             [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
             ],
             Attacking : [
-            [pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-            ],
+            [pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'left','bottom'] for f in range(4) 
+            ],[pyglet.image.load('images/char/attacking/{}_top.png'.format(f))  for f in range(2)]
+            ]
              }
 
     def __init__(self, *args, **kwargs):
@@ -138,7 +114,6 @@ class Character(Creature):
         self.images = Character.images
 
         super(Character, self).__init__(*args, w=1, h=2, **kwargs)
->>>>>>> 11ba45ce757d8cd921e4512131c1c8e91c68810b
 
 class Castle(Creature):
     images = {
@@ -164,48 +139,8 @@ class Castle(Creature):
 
 
 class Monster(Creature):
-<<<<<<< HEAD
-	images = None
+    images = None
 
-	def target_missed(self):
-		self.state = Moving(self, self.getAngle())
- 
-	def getAngle(self):
-		c_x, c_y = self.game.castle.x, self.game.castle.y
-		offset = atan2(c_y - self.y , c_x -self.x)
-		return offset
-
-	def __init__(self, *args, **kwargs):
-		
-		self.hp = 30
-		self.att = 2
-
-		super(Monster, self).__init__(*args, **kwargs)
-		self.speed = 100
-
-	def collision(self):
-		neighbours = self.game.grid.neighbours(self)
-		for n in neighbours:
-			if isinstance(n, Castle) or isinstance(n, Character):
-				self.state = Attacking(self,n)
-				return
-=======
-    images = {
-
-            Idle: [
-            [pyglet.image.load('images/monster/idle/0_right.png')]
-            ],
-            Moving : [
-            [pyglet.image.load('images/monster/moving/{}_right.png'.format(f))] for f in range(4) 
-            ],
-            Attacking : [
-            [pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-            ],
-            Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-            ],
-            
-             }
 
     def attack_finished(self):
         super(Monster, self).attack_finished()
@@ -223,7 +158,7 @@ class Monster(Creature):
         return offset
 
     def __init__(self, *args, **kwargs):
-        self.images = Monster.images
+        
         self.hp = 30
         self.att = 2
 
@@ -236,51 +171,50 @@ class Monster(Creature):
             if isinstance(n, Castle) or isinstance(n, Character):
                 self.state = Attacking(self,n)
                 return
->>>>>>> 11ba45ce757d8cd921e4512131c1c8e91c68810b
 
 class SeaMonster(Monster):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/monster/seamonster/idle/0_right.png')]
-			],
-			Moving : [
-			[pyglet.image.load('images/monster/seamonster/moving/{}_right.png'.format(f))] for f in range(4) 
-			],
-			Attacking : [
-			[pyglet.image.load('images/monster/seamonster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-			],
-			
-			 }
+            Idle: [
+            [pyglet.image.load('images/monster/seamonster/idle/0_right.png')]
+            ],
+            Moving : [
+            [pyglet.image.load('images/monster/seamonster/moving/{}_right.png'.format(f))] for f in range(4) 
+            ],
+            Attacking : [
+            [pyglet.image.load('images/monster/seamonster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
+            ],
+            Dying : [
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            ],
+            
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.images = SeaMonster.images
-		super(SeaMonster,self).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        self.images = SeaMonster.images
+        super(SeaMonster,self).__init__(*args,**kwargs)
 
 class JungleMonster(Monster):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/monster/junglemonster/idle/0_left.png')]
-			],
-			Moving : [
-			[pyglet.image.load('images/monster/junglemonster/moving/{}_left.png'.format(f))] for f in range(4) 
-			],
-			Attacking : [
-			[pyglet.image.load('images/monster/junglemonster/attacking/{}_{}.png'.format(f,p)) for p in ['left']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-			],
-			
-			 }
+            Idle: [
+            [pyglet.image.load('images/monster/junglemonster/idle/0_left.png')]
+            ],
+            Moving : [
+            [pyglet.image.load('images/monster/junglemonster/moving/{}_left.png'.format(f))] for f in range(4) 
+            ],
+            Attacking : [
+            [pyglet.image.load('images/monster/junglemonster/attacking/{}_{}.png'.format(f,p)) for p in ['left']] for f in range(4) 
+            ],
+            Dying : [
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            ],
+            
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.images = JungleMonster.images
-		super(JungleMonster,self).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        self.images = JungleMonster.images
+        super(JungleMonster,self).__init__(*args,**kwargs)
 
 class Chest(StillObject):
     images = {
