@@ -61,7 +61,8 @@ class GameWindow(pyglet.window.Window):
 		monster = Monster(self, 0, random.randint(0,self.height), 1, 2)
 
 		self.elements.append(monster)
-		monster.setAngle()
+		offset=monster.getAngle()
+		monster.state = Moving(monster, offset)
 
 	def update(self, dt):
 		for element in self.elements:

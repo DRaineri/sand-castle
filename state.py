@@ -81,7 +81,11 @@ class Attacking(State):
 		super(Attacking,self).update(dt)
 		neighbours = self.element.game.grid.neighbours(self.element)
 
-		#for n in neighbours:
-		#	if not isinstance(n, Castle) and not isinstance(n, Character):
-		#		self.element.state = Moving(self,n)
+		for n in neighbours:
+			if n==self.target:
+				return
+		self.element.state=Moving(self.element, self.element.getAngle())
+
+
+
 
