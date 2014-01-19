@@ -55,15 +55,10 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
         self.castle = CastleLvl1(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+        self.elements.append(self.castle)
 
-<<<<<<< HEAD
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
         self.screen_craft = ScreenCraft(self)
-
-=======
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
-        self.elements.append(self.castle)
->>>>>>> 4d308e96e96bd7425400b315f8100b0c20582290
 
        
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)

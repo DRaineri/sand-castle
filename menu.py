@@ -25,17 +25,18 @@ class MenuWindow(pyglet.window.Window):
         super(MenuWindow, self).__init__(*args, **kwargs)
 
         bg_color = pyglet.image.SolidColorImagePattern(color=(80, 80, 80, 255))
-        self.bg_img = bg_color.create_image(self.width, self.height)
+        self.bg_img = pyglet.image.load('images/chest/idle/menu_bg.png')
         self.bg = pyglet.sprite.Sprite(self.bg_img)
     
         self.t_y = 0
 
         self.width, self.height = args[:2]
 
-        self.title = pyglet.text.Label("Tropical dreams", font_name='Stainy Personal Use Only', font_size=70,x=self.width//2, y=self.height//2, anchor_x='center', anchor_y='center')
+        def_x = 20
+        self.title = pyglet.text.Label("Tropical dreams", font_name='Stainy Personal Use Only', font_size=95, x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
         
-        self.new_game = pyglet.text.Label("New game", font_name='Ubuntu', font_size=40,x=self.width//2, y=self.height//2, anchor_x='center', anchor_y='center')
-        self.exit = pyglet.text.Label("Exit", font_name='Ubuntu', font_size=40,x=self.width//2, y=self.height//2, anchor_x='center', anchor_y='center')
+        self.new_game = pyglet.text.Label("New game", font_name='Ubuntu', font_size=40,x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
+        self.exit = pyglet.text.Label("Exit", font_name='Ubuntu', font_size=40,x=def_x, y=self.height//2, anchor_x='left', anchor_y='center')
         
         self.selected = 0
 
@@ -72,6 +73,6 @@ class MenuWindow(pyglet.window.Window):
                 self.close()
 
 if __name__ == '__main__' :
-    m = MenuWindow(1024, 800)
+    m = MenuWindow(1500, 800)
     pyglet.app.run()
 

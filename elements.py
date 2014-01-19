@@ -119,7 +119,7 @@ class Character(Creature):
          }
 
     def __init__(self, *args, **kwargs):
-<<<<<<< HEAD
+
         self.images = Character.images
         super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
@@ -128,6 +128,9 @@ class Character(Creature):
 
         self.lvl = 1        
         self.xp = 0        
+
+        self.soundAttack = pyglet.resource.media('sound/attack.mp3',streaming = False)
+
 
     @property
     def xp(self):
@@ -159,23 +162,10 @@ class Character(Creature):
 
         self._lvl=value
 
-            
-=======
-
-        self.xp = 50
-        self.lvl = 2
-        self.total_hp = self.hp = 20
-        self.att = 5
-        self.images = Character.images
-        self.soundAttack = pyglet.resource.media('sound/attack.mp3',streaming = False)
-        super(Character, self).__init__(*args, w=1, h=2, **kwargs)
-        
     def started_attack(self):
     	super(Character,self).started_attack()
     	self.soundAttack.play()
 
->>>>>>> 4d308e96e96bd7425400b315f8100b0c20582290
-        
 
     def attackable(self, e):
         return isinstance(e, Monster)
