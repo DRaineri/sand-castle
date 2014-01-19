@@ -95,8 +95,9 @@ class Character(Creature):
 			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
 			],
 			Attacking : [
-			[pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-			],
+			[pyglet.image.load('images/char/attacking/{}_{}.png'.format(f,p)) for p in ['right', 'left','bottom'] for f in range(4) 
+			],[pyglet.image.load('images/char/attacking/{}_top.png'.format(f))  for f in range(2)]
+			]
 			 }
 
 	def __init__(self, *args, **kwargs):
