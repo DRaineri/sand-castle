@@ -130,10 +130,16 @@ class Castle(Creature):
         self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
 
+<<<<<<< HEAD
+	def interact(self, character):
+		print "magicCastle !!!"
+		self.game.launch_crafting()
+=======
     def interact(self, character):
         print "magicCastle !!!"
         self.game.launch_crafting()
         pass
+>>>>>>> 6451231fd0bcbd06ac9783a09948ac7b605417e3
 
 
 
