@@ -142,14 +142,7 @@ class GameWindow(pyglet.window.Window):
 
     def on_mouse_press(self, x, y, button, modifiers): 
         if button == pyglet.window.mouse.LEFT:
-            neighboors = self.grid.neighbours(self.character)
-            for el in neighboors:
-
-                if (isinstance(el, SeaMonster)) or (isinstance(el, JungleMonster)):
-                    # TODO : Change this by switching the state to attacking
-                    self.character.attack(el)
-
-                    return
+            self.character = Attacking(self.character)
         elif button == pyglet.window.mouse.RIGHT:
             cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
             if cell.element and cell.element in self.grid.neighbours(self.character):

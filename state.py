@@ -72,14 +72,12 @@ class Moving(State):
 	#	print "interact"
 
 
-
-	
-
 class Attacking(State):
 	"""docstring for Attacking"""
-	def __init__(self, element, anim_delay=1):
-		super(Attacking, self).__init__(element)
+	def __init__(self, element, anim_delay=0.2):
+		super(Attacking, self).__init__(element, anim_delay=anim_delay)
 		self.images = self.element.images[Attacking]
+		print self.images
 
 	def update(self, dt):
 		super(Attacking, self).update(dt)
