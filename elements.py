@@ -128,13 +128,13 @@ class Character(Creature):
 class Castle(Creature):
     images = {
 
-            Idle: [
-            [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
-            ],
-            Dying : [
-            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
-            ],
-             }
+        Idle: [
+        [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
+        ],
+        Dying : [
+        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        ],
+         }
     def __init__(self, *args, **kwargs):
         self.images = Castle.images
         self.att = 5
