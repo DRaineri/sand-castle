@@ -63,21 +63,26 @@ class Element(object):
     def is_collidable(self):
         return True
 
+    def target_missed(self):        
+        neighbours = self.game.grid.neighbours(self)
+        self.state = Moving(self, self.angle)
+
+
+
 #SubClass
 class Creature(Element):
 
     def __init__(self, *args, **kwargs):
         super(Creature, self).__init__(*args, **kwargs)
-
         self.hp = 10
-
+        self.target = None
         self.angle = 0.0
         self.speed = 500
 
     def attack(self, element):
         element.hp -= self.att
         if element.hp<=0:
-            element.state=Dying(self,0)
+            element.state=Dying(element,1)
 
 
 class StillObject(Element):
@@ -96,6 +101,9 @@ class Character(Creature):
             ],
             Dying : [
             [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            ],
+            Attacking : [
+            [pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
             ],
              }
 
@@ -122,10 +130,10 @@ class Castle(Creature):
         self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
 
-	def interact(self, character):
-		print "magicCastle !!!"
-		self.game.launch_crafting()
-		pass
+    def interact(self, character):
+        print "magicCastle !!!"
+        self.game.launch_crafting()
+        pass
 
 
 
@@ -147,6 +155,8 @@ class Monster(Creature):
             
              }
 
+    def target_missed(self):
+        self.state = Moving(self, self.getAngle())
  
     def getAngle(self):
         c_x, c_y = self.game.castle.x, self.game.castle.y
@@ -211,26 +221,26 @@ class Projectile(Creature):
 
 
 class Foam(StillObject):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/foam/idle/idle.png')]
-			]
-			 }
+            Idle: [
+            [pyglet.image.load('images/foam/idle/idle.png')]
+            ]
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.images = Foam.images
-		super(Foam, self).__init__(*args, **kwargs)
-		self.angle = 0.0
-		self.x0 = self.x
-		self.tick=0
+    def __init__(self, *args, **kwargs):
+        self.images = Foam.images
+        super(Foam, self).__init__(*args, **kwargs)
+        self.angle = 0.0
+        self.x0 = self.x
+        self.tick=0
 
 
-	def update(self, dt):
-		super(Foam,self).update(dt)
-		self.tick += 1
-		dx = (cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4)*0.3
-		self.x = self.x0 - dx
-		
+    def update(self, dt):
+        super(Foam,self).update(dt)
+        self.tick += 1
+        dx = (cos(self.tick/25.0)*config.CELL_SIZE/4-config.CELL_SIZE/4)*0.3
+        self.x = self.x0 - dx
+        
 if __name__ == '__main__':
     pass
