@@ -63,29 +63,35 @@ class Element(object):
     def is_collidable(self):
         return True
 
+    def die(self):
+        self.state = Dying(self)
+
 
 #SubClass
 class Creature(Element):
 
     def __init__(self, *args, **kwargs):
         super(Creature, self).__init__(*args, **kwargs)
-        self.hp = 10
+        self.total_hp = self.hp = 10
         self.target = None
         self.angle = 0.0
         self.speed = 500
 
     def attack_finished(self):
         for n in self.game.grid.neighbours(self):
-            if not isinstance(n, Creature):
+            if not self.attackable(n):
                 continue
             self.attack(n)
 
         self.state = Idle(self)
 
+    def attackable(self, e):
+        return isinstance(e, Creature)
+
     def attack(self, element):
         element.hp -= self.att
         if element.hp <= 0:
-            element.state = Dying(element)
+            element.die()
 
 class StillObject(Element):
     def __init__(self, *args, **kwargs):
@@ -110,13 +116,14 @@ class Character(Creature):
          }
 
     def __init__(self, *args, **kwargs):
-        self.hp = 20
+        self.total_hp = self.hp = 20
         self.att = 5
         self.images = Character.images
 
         super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
-
+    def attackable(self, e):
+        return isinstance(e, Monster)
 
 class Castle(Creature):
     images = {
@@ -130,8 +137,8 @@ class Castle(Creature):
              }
     def __init__(self, *args, **kwargs):
         self.images = Castle.images
-        self.att=5
-        self.hp = 100
+        self.att = 5
+        self.total_hp = self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
 
 
@@ -143,6 +150,14 @@ class Castle(Creature):
 
 class Monster(Creature):
     images = None
+
+    def __init__(self, *args, **kwargs):
+        
+        self.hp = 30
+        self.att = 2
+
+        super(Monster, self).__init__(*args, **kwargs)
+        self.speed = 100
 
 
     def attack_finished(self):
@@ -160,13 +175,9 @@ class Monster(Creature):
         offset = atan2(c_y - self.y , c_x -self.x)
         return offset
 
-    def __init__(self, *args, **kwargs):
-        
-        self.hp = 30
-        self.att = 2
 
-        super(Monster, self).__init__(*args, **kwargs)
-        self.speed = 100
+    def attackable(self, e):
+        return isinstance(e, Character) or isinstance(e, Castle)
 
     def collision(self):
         neighbours = self.game.grid.neighbours(self)
@@ -197,6 +208,11 @@ class SeaMonster(Monster):
         self.images = SeaMonster.images
         super(SeaMonster,self).__init__(*args,**kwargs)
 
+    def die(self):
+        super(SeaMonster, self).die()
+        self.game.shark_teeth += 1
+        self.game.score += 200
+
 class JungleMonster(Monster):
     images = {
 
@@ -219,14 +235,21 @@ class JungleMonster(Monster):
         self.images = JungleMonster.images
         super(JungleMonster,self).__init__(*args,**kwargs)
 
+    def die(self):
+        super(JungleMonster, self).die()
+        self.game.bear_pelt += 1
+        self.game.score += 200
 
 class Chest(StillObject):
     images = {
 
             Idle: [
-            [pyglet.image.load('images/chest/idle/chest_idle.png')]
+                [pyglet.image.load('images/chest/idle/chest_idle.png')]
+            ],
+            Dying: [
+                [pyglet.image.load('images/chest/idle/chest_idle.png')]
             ]
-             }
+            }
 
     def __init__(self, *args, **kwargs):
         self.images = Chest.images
@@ -235,6 +258,7 @@ class Chest(StillObject):
     
     def interact(self, character):
         character.game.ruby += 1
+        self.die()
 
 class Projectile(Creature):
     images = {
