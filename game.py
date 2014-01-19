@@ -98,12 +98,14 @@ class GameWindow(pyglet.window.Window):
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
         pyglet.clock.schedule_interval(self.addJungleMonster, 5)
         pyglet.clock.schedule_interval(self.shoot_monsters, 5)
+        pyglet.clock.schedule_interval(self.addChest,random.randint(10,30))
 
     def unschedule_tasks(self):
         pyglet.clock.unschedule(self.update)
         pyglet.clock.unschedule(self.addSeaMonster)
         pyglet.clock.unschedule(self.addJungleMonster)
         pyglet.clock.unschedule(self.shoot_monsters)
+        pyglet.clock.unschedule(self.addChest)
             
     def shoot_monsters(self, dt=0):
         monster = None
@@ -133,6 +135,14 @@ class GameWindow(pyglet.window.Window):
         self.elements.append(jungle_monster)
         offset=jungle_monster.getAngle()
         jungle_monster.state = Moving(jungle_monster, offset)
+
+    def addChest(self, dt=0):
+        if not any(isinstance(element,Chest) for element in self.elements) :
+            chest = Chest(self, random.randint(0,self.width-50), random.randint(0,self.height-50))
+            self.elements.append(chest)
+        else :
+            print 'Chest already on map'
+
 
     def update(self, dt):
         for element in self.elements:
