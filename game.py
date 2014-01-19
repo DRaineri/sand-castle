@@ -4,9 +4,11 @@
 import pyglet
 from grid import Grid
 
-from elements import Character, Monster, Castle, Chest
+from elements import Character, Monster, Castle, Chest, Foam
 
 from pyglet.window import key
+
+from crafting import Screen_craft
 
 import config
 import random
@@ -39,10 +41,11 @@ class GameWindow(pyglet.window.Window):
         # Graphical objects
         self.elements = []
 
-        self.character = Character(self, 10, 0)
+        self.character = Character(self, (self.width)/2-(1.5*config.CELL_SIZE)-10, (self.height)/2-10)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
-        
+        self.foam = Foam(self,50,-300)
+
         self.elements.append(self.character)
         self.addSeaMonster()
         self.addSeaMonster()
@@ -51,6 +54,9 @@ class GameWindow(pyglet.window.Window):
 
 
         self.elements.append(self.castle)
+
+        self.screen_craft = Screen_craft()
+        self.crafting_on = False
 
         # Setting an update frequency of 60hz
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
@@ -70,6 +76,7 @@ class GameWindow(pyglet.window.Window):
 
         # Updating the element in grids
         self.grid.update_elements(self.elements)
+        self.foam.update(dt)
 
     def on_draw(self):
         self.background.draw()
@@ -79,7 +86,10 @@ class GameWindow(pyglet.window.Window):
         # Drawing all elements
         for element in self.elements:
             element.draw()
+        
         self.grid.draw_foreground()
+        self.foam.draw()
+
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
@@ -87,6 +97,10 @@ class GameWindow(pyglet.window.Window):
         header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()
+
+        if self.crafting_on:
+            self.screen_craft.draw()
+
 
 
     def on_mouse_motion(self, x, y, dx, dy): 
@@ -146,6 +160,18 @@ class GameWindow(pyglet.window.Window):
         if symbol in movement_keys and not any(self.keys[s] for s in movement_keys):
 
             self.character.state = Idle(self.character)
+
+    def launch_crafting(self):
+        pyglet.clock.unschedule(self.update)
+        pyglet.clock.unschedule(self.addSeaMonster)
+
+        self.crafting_on = True
+        self.screen_craft.run_crafting()
+
+        pyglet.clock.schedule_interval(self.update, 1.0 / 60)
+        pyglet.clock.schedule_interval(self.addSeaMonster, 5)
+
+
 
 if __name__ == '__main__':
     g = GameWindow(1200, 800)
