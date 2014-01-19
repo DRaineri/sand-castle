@@ -120,19 +120,52 @@ class Character(Creature):
 
     def __init__(self, *args, **kwargs):
 
-        self.xp = 50
-        self.lvl = 2
+        self.images = Character.images
+        super(Character, self).__init__(*args, w=1, h=2, **kwargs)
+
         self.total_hp = self.hp = 20
         self.att = 5
-        self.images = Character.images
+
+        self.lvl = 1        
+        self.xp = 0        
+
         self.soundAttack = pyglet.resource.media('sound/attack.mp3',streaming = False)
-        super(Character, self).__init__(*args, w=1, h=2, **kwargs)
+
+
+    @property
+    def xp(self):
+        return self._xp
+
+    @xp.setter
+    def xp(self, value):
+        self._xp = value
+
+        if self.xp >= 100:
+            self.lvl += 1
+            self._xp = self.xp - 100
+
         
+    @property
+    def lvl(self):
+        return self._lvl
+
+    @lvl.setter
+    def lvl(self, value):
+        if value == 2:
+            self.game.elements.remove(self.game.castle)
+            self.game.castle = CastleLvl2(self.game,(self.game.width)/2-(1.5*config.CELL_SIZE), (self.game.height)/2, 2,2)
+            self.game.elements.append(self.game.castle)
+        elif value == 3:
+            self.game.elements.remove(self.game.castle)
+            self.game.castle = CastleLvl3(self.game,(self.game.width)/2-(1.5*config.CELL_SIZE), (self.game.height)/2, 2,2)
+            self.game.elements.append(self.game.castle)
+
+        self._lvl=value
+
     def started_attack(self):
     	super(Character,self).started_attack()
     	self.soundAttack.play()
 
-        
 
     def attackable(self, e):
         return isinstance(e, Monster)
@@ -142,17 +175,8 @@ class Character(Creature):
         self.game.game_over = True
 
 class Castle(Creature):
-    images = {
 
-        Idle: [
-        [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
-        ],
-        Dying : [
-        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
-        ],
-         }
     def __init__(self, *args, **kwargs):
-        self.images = Castle.images
         self.att = 5
         self.total_hp = self.hp = 100
         super(Castle, self).__init__(*args, **kwargs)
@@ -164,6 +188,49 @@ class Castle(Creature):
         super(Castle, self).die()
         self.game.game_over = True
 
+class CastleLvl1(Castle):
+    images = {
+        Idle: [
+        [pyglet.image.load('images/castle/idle/etat0.png')]
+        ],
+        Dying : [
+        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        ],
+     }
+
+    def __init__(self, *args, **kwargs):
+        self.images = CastleLvl1.images
+        super(CastleLvl1, self).__init__(*args, **kwargs)
+        self.total_hp = self.hp = 200
+
+class CastleLvl2(Castle):
+    images = {
+            Idle: [
+            [pyglet.image.load('images/castle/idle/etat1.png')]
+            ],
+            Dying : [
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+            ],
+     }
+    def __init__(self, *args, **kwargs):
+        self.images = CastleLvl2.images
+        super(CastleLvl2, self).__init__(*args, **kwargs)
+        self.total_hp = self.hp = 400
+
+class CastleLvl3(Castle):
+    images = {
+        Idle: [
+        [pyglet.image.load('images/castle/idle/etat2.png')]
+        ],
+        Dying : [
+        [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['death']]
+        ],
+         }
+
+    def __init__(self, *args, **kwargs):
+        self.images = CastleLvl3.images
+        self.total_hp = self.hp = 1000
+        super(CastleLvl3, self).__init__(*args, **kwargs)
 
 class Monster(Creature):
     images = None
@@ -238,6 +305,7 @@ class SeaMonster(Monster):
         super(SeaMonster, self).die()
         self.game.shark_teeth += 1
         self.game.score += 200
+        self.game.character.xp+=10
 
 class JungleMonster(Monster):
     images = {
@@ -272,6 +340,7 @@ class JungleMonster(Monster):
         super(JungleMonster, self).die()
         self.game.bear_pelt += 1
         self.game.score += 200
+        self.game.character.xp+=10
 
 class Chest(StillObject):
     images = {

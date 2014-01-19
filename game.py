@@ -12,7 +12,7 @@ from math import radians, atan2
 import config
 from grid import Grid
 from state import Moving, Idle, Attacking, Dying
-from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
+from elements import Character, Monster, CastleLvl1, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
 
 def draw_rect(x1, y1, x2, y2):
     batch = pyglet.graphics.Batch()
@@ -54,9 +54,11 @@ class GameWindow(pyglet.window.Window):
 
         # Graphical objects
         self.elements = []
-
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+        self.castle = CastleLvl1(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         self.elements.append(self.castle)
+
+        self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
+        self.screen_craft = ScreenCraft(self)
 
        
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
@@ -155,7 +157,7 @@ class GameWindow(pyglet.window.Window):
         self.grid.draw_background()
 
 
-        # Drawing all elements
+        # Drawing all elementscha
         for element in self.elements:
             element.draw()
         
