@@ -66,6 +66,8 @@ class Grid(object):
                 cell.element = None
 
         for element in elements:
+            if not element.is_collidable():
+                continue
             for x, y in element.cells():
                 self.grid[y][x].element = element
 

@@ -8,171 +8,204 @@ import config
 from math import radians, atan2
 
 class Element(object):
-	""" Main class of elements on board """
-	def __init__(self, game, x, y, w=1, h=1):
-		super(Element, self).__init__()
-		self.x, self.y = x, y
-		self.w, self.h = w, h
+    """ Main class of elements on board """
+    def __init__(self, game, x, y, w=1, h=1):
+        super(Element, self).__init__()
+        self.x, self.y = x, y
+        self.w, self.h = w, h
 
-		self.game = game
-		
-		self._state = Idle(self)
+        self.game = game
+        
+        self._state = Idle(self)
 
-		self.last_state = Idle(self)
+        self.last_state = Idle(self)
 
-		self.cur_image = self.images[Idle][0][0]
+        self.cur_image = self.images[Idle][0][0]
 
-	@property
-	def state(self):
-		return self._state
+    @property
+    def state(self):
+        return self._state
 
-	@state.setter
-	def state(self, value):
-		self.last_state = self._state
-		self._state = value
+    @state.setter
+    def state(self, value):
+        self.last_state = self._state
+        self._state = value
 
-	def update(self, dt):
-		self.state.update(dt)
+    def update(self, dt):
+        self.state.update(dt)
 
-	def center(self):
-		center = (self.x + self.w*config.CELL_SIZE/2 , self.y + self.h*config.CELL_SIZE/2)
-		return center
+    def center(self):
+        center = (self.x + self.w*config.CELL_SIZE/2 , self.y + self.h*config.CELL_SIZE/2)
+        return center
 
-	def draw(self):
-		sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
-		sprite.draw()
+    def diff_angle(self, element):
+        e_x, e_y = element.center()
+        return atan2(e_y - self.y , e_x -self.x)
 
-	def interact(self, character):
-		pass
+    def draw(self):
+        sprite = pyglet.sprite.Sprite(self.cur_image, self.x, self.y)
+        sprite.draw()
 
-	def collision(self):
-		self.state = Idle(self)
+    def interact(self, character):
+        pass
 
-	def cells(self):
-		cell_x = int(self.x // config.CELL_SIZE)
-		cell_y = int(self.y // config.CELL_SIZE)
+    def collision(self):
+        self.state = Idle(self)
 
-		return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)
-		        if 0 <= cell_x + i < self.game.grid.w and 0 <= cell_y + j < self.game.grid.h ]
+    def cells(self):
+        cell_x = int(self.x // config.CELL_SIZE)
+        cell_y = int(self.y // config.CELL_SIZE)
+
+        return [(cell_x + i, cell_y + j) for i in xrange(self.w) for j in xrange(self.h)
+                if 0 <= cell_x + i < self.game.grid.w and 0 <= cell_y + j < self.game.grid.h ]
+
+    def is_collidable(self):
+        return True
+
 #SubClass
 class Creature(Element):
 
-	def __init__(self, *args, **kwargs):
-		super(Creature, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Creature, self).__init__(*args, **kwargs)
 
-		self.hp = 10
+        self.hp = 10
 
-		self.angle = 0.0
-		self.speed = 500
+        self.angle = 0.0
+        self.speed = 500
 
-	def attack(self, element):
-		element.hp -= self.att
-		if element.hp<=0:
-			element.state=Dying(self,0)
+    def attack(self, element):
+        element.hp -= self.att
+        if element.hp<=0:
+            element.state=Dying(self,0)
 
 
 class StillObject(Element):
-	def __init__(self, *args, **kwargs):
-		super(StillObject, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(StillObject, self).__init__(*args, **kwargs)
 
 #SubSubClass
 class Character(Creature):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
-			],
-			Moving : [
-			[pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-			],
-			 }
+            Idle: [
+            [pyglet.image.load('images/char/idle/0_{}.png'.format(pos)) for pos in ['right', 'top', 'left', 'bottom']]
+            ],
+            Moving : [
+            [pyglet.image.load('images/char/moving/{}_{}.png'.format(f,p)) for p in ['right', 'top', 'left', 'bottom']] for f in range(4) 
+            ],
+            Dying : [
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            ],
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.hp = 20
-		self.att = 5
-		self.images = Character.images
+    def __init__(self, *args, **kwargs):
+        self.hp = 20
+        self.att = 5
+        self.images = Character.images
 
-		super(Character, self).__init__(*args, w=1, h=2, **kwargs)
+        super(Character, self).__init__(*args, w=1, h=2, **kwargs)
 
 class Castle(Creature):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-			],
-			 }
-	def __init__(self, *args, **kwargs):
-		self.images = Castle.images
-		self.att=5
-		self.hp = 100
-		super(Castle, self).__init__(*args, **kwargs)
+            Idle: [
+            [pyglet.image.load('images/castle/idle/{}.png'.format(pos)) for pos in ['etat0', 'etat1', 'etat2']]
+            ],
+            Dying : [
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            ],
+             }
+    def __init__(self, *args, **kwargs):
+        self.images = Castle.images
+        self.att=5
+        self.hp = 100
+        super(Castle, self).__init__(*args, **kwargs)
 
-	def interact(self, character):
-		pass
+    def interact(self, character):
+        pass
 
 
 
 class Monster(Creature):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/monster/idle/0_right.png')]
-			],
-			Moving : [
-			[pyglet.image.load('images/monster/moving/{}_right.png'.format(f))] for f in range(4) 
-			],
-			Attacking : [
-			[pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
-			],
-			Dying : [
-			[pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
-			],
-			
-			 }
+            Idle: [
+            [pyglet.image.load('images/monster/idle/0_right.png')]
+            ],
+            Moving : [
+            [pyglet.image.load('images/monster/moving/{}_right.png'.format(f))] for f in range(4) 
+            ],
+            Attacking : [
+            [pyglet.image.load('images/monster/attacking/{}_{}.png'.format(f,p)) for p in ['right']] for f in range(4) 
+            ],
+            Dying : [
+            [pyglet.image.load('images/char/dying/0_{}.png'.format(p)) for p in ['blood']]
+            ],
+            
+             }
 
  
-	def getAngle(self):
-		c_x, c_y = self.game.castle.x, self.game.castle.y
-		offset = atan2(c_y - self.y , c_x -self.x)
-		return offset
+    def getAngle(self):
+        c_x, c_y = self.game.castle.x, self.game.castle.y
+        offset = atan2(c_y - self.y , c_x -self.x)
+        return offset
 
-	def __init__(self, *args, **kwargs):
-		self.images = Monster.images
-		self.hp = 30
-		self.att = 2
+    def __init__(self, *args, **kwargs):
+        self.images = Monster.images
+        self.hp = 30
+        self.att = 2
 
-		super(Monster, self).__init__(*args, **kwargs)
-		self.speed = 100
+        super(Monster, self).__init__(*args, **kwargs)
+        self.speed = 100
 
-	def collision(self):
-		neighbours = self.game.grid.neighbours(self)
-		for n in neighbours:
-			if isinstance(n, Castle) or isinstance(n, Character):
-				self.state = Attacking(self,n)
-				return
+    def collision(self):
+        neighbours = self.game.grid.neighbours(self)
+        for n in neighbours:
+            if isinstance(n, Castle) or isinstance(n, Character):
+                self.state = Attacking(self,n)
+                return
 
 class Chest(StillObject):
-	images = {
+    images = {
 
-			Idle: [
-			[pyglet.image.load('images/chest/idle/chest_idle.png')]
-			]
-			 }
+            Idle: [
+            [pyglet.image.load('images/chest/idle/chest_idle.png')]
+            ]
+             }
 
-	def __init__(self, *args, **kwargs):
-		self.images = Chest.images
-		super(Chest, self).__init__(*args, **kwargs)
-		self.angle = 0.0
-	
-	def interact(self, character):
-		character.game.ruby += 1
+    def __init__(self, *args, **kwargs):
+        self.images = Chest.images
+        super(Chest, self).__init__(*args, **kwargs)
+        self.angle = 0.0
+    
+    def interact(self, character):
+        character.game.ruby += 1
+
+class Projectile(Creature):
+    images = {
+
+            Idle: [
+            [pyglet.image.load('images/projectile/idle/bomb.png')]
+            ],
+            Moving: [
+            [pyglet.image.load('images/projectile/idle/bomb.png')]
+            ]
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.images = Projectile.images
+        super(Projectile, self).__init__(*args, **kwargs)
+
+    def shoot(self, target):
+        angle = self.diff_angle(target)
+        self.state = Moving(self, angle)
+
+    def collision(self):
+        print 'collision !'
+    
+    def is_collidable(self):
+        return False
+
 
 if __name__ == '__main__':
-	pass
-
+    pass

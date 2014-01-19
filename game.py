@@ -4,7 +4,7 @@
 import pyglet
 from grid import Grid
 
-from elements import Character, Monster, Castle, Chest
+from elements import Character, Monster, Castle, Chest, Projectile
 
 from pyglet.window import key
 
@@ -42,20 +42,31 @@ class GameWindow(pyglet.window.Window):
         self.character = Character(self, 10, 0)
         self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
         
-        
         self.elements.append(self.character)
-        self.addSeaMonster()
-        self.addSeaMonster()
-        
-        self.elements.append(Chest(self,750,0))
-
-
         self.elements.append(self.castle)
 
+        self.elements.append(Chest(self,750,0))    
+        self.addSeaMonster()
+        self.addSeaMonster()
+    
         # Setting an update frequency of 60hz
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
+        pyglet.clock.schedule_interval(self.shoot_monsters, 2)
 
+    def shoot_monsters(self, dt=0):
+        monster = None
+        for el in self.elements:
+            if isinstance(el, Monster):
+                monster = el
+                break
+
+        if not monster:
+            return
+
+        proj = Projectile(self, self.castle.x, self.castle.y)
+        proj.shoot(monster)
+        self.elements.append(proj)
 
     def addSeaMonster(self, dt=0):
         monster = Monster(self, 0, random.randint(0,self.height), 2, 2)
