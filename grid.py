@@ -21,11 +21,11 @@ class Grid(object):
         for y, row in enumerate(self.grid):
             for x, col in enumerate(row):
                 r_x, r_y = x * config.CELL_SIZE, y * config.CELL_SIZE
-                if x<2:
+                if x<1:
                     self.grid[y][x] = Sea(r_x, r_y)
-                elif x==2:
+                elif x==1:
                     self.grid[y][x] = SeaBorder(r_x, r_y)
-                elif x>(self.w-4):
+                elif x>(self.w-3):
                     self.grid[y][x] = Jungle(r_x, r_y)
                 else:
                     self.grid[y][x] = Sand(r_x, r_y)
@@ -103,12 +103,16 @@ class Sand(Cell):
 
 class Jungle(Cell):
 
-    images = [(pyglet.image.load('images/background/jungle{}.png'.format(i)), weight)
-              for (i, weight) in [(1, 1), (2, 1), (3,1), (4, 2), (5,2), (6,2)] ]
+    back_images = [(pyglet.image.load('images/background/sand{}.png'.format(i)), weight)
+              for (i, weight) in [(1, 90), (2, 10), (3,10), (4, 2), (5,2), (6,2)] ]
+
+    front_image = [pyglet.image.load('images/background/jungle{}.png'.format(i))
+              for i in xrange(1,6) ]
 
     def __init__(self, *args, **kwargs):
-        self.images = Jungle.images
+        self.images = Jungle.back_images
         super(Jungle, self).__init__(*args, **kwargs)
+        #self.foreground =  pyglet.sprite.Sprite(random.choice(Jungle.front_image),self.x,self.y)
 
 class Sea(Cell):
     

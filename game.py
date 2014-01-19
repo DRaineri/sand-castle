@@ -2,20 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import pyglet
-from grid import Grid
-
-
-from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster
-
 
 from pyglet.window import key
-
 from crafting import ScreenCraft
 
-import config
 import random
-from state import Moving, Idle, Attacking,Dying
 from math import radians, atan2
+
+import config
+from grid import Grid
+from state import Moving, Idle, Attacking, Dying
+from elements import Character, Monster, Castle, Chest, Projectile, Foam, SeaMonster, JungleMonster, Forest
 
 class GameWindow(pyglet.window.Window):
 
@@ -28,14 +25,20 @@ class GameWindow(pyglet.window.Window):
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
 
+        self.score = 0
+
         # Resources
         self.ruby = 0
-        self.shark_leather = 0
+        self.shark_teeth = 0
+        self.bear_pelt = 0
 
         # Background
-        bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 50, 255))
-        self.background_image = bg_color.create_image(self.width, self.height)
-        self.background = pyglet.sprite.Sprite(self.background_image)
+        bg_color = pyglet.image.SolidColorImagePattern(color=(20, 20, 20, 255))
+        self.paused_img = bg_color.create_image(self.width, self.height)
+        self.paused_over= pyglet.sprite.Sprite(self.paused_img)
+        self.paused_over.opacity = 220
+        self.paused_txt = pyglet.text.Label(text="Paused", font_name="Ubuntu", bold=True, font_size=65,
+                                       x=self.width / 2, y=self.height/2, anchor_x='center', anchor_y='center')
 
         g_w, g_h = self.width // config.CELL_SIZE + 1, self.height // config.CELL_SIZE + 1
         self.grid = Grid(g_w, g_h)
@@ -44,32 +47,44 @@ class GameWindow(pyglet.window.Window):
         self.elements = []
 
         self.character = Character(self, (self.width)/2-(3*config.CELL_SIZE)-10, (self.height)/2-10)
-        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
-        
-        self.foam = Foam(self,50,-300)
 
-        self.elements.append(self.character)
+
 
         self.addSeaMonster()
         self.addSeaMonster()
         self.addJungleMonster()
 
         self.elements.append(Chest(self,750,0))
-
+        self.elements.append(self.character)
 
         self.screen_craft = ScreenCraft(self)
+
+        self.castle = Castle(self,(self.width)/2-(1.5*config.CELL_SIZE), (self.height)/2, 2,2)
+
         self.elements.append(self.castle)
+        
+        self.foam = Foam(self,-50,-300)
+        self.forest = Forest(self,self.width-100,0)
+        self.elements.append(Chest(self,750,0))
     
         self.crafting_on = False
-
+        self.paused = False
 
         # Setting an update frequency of 60hz
+        self.schedule_tasks()
+
+    def schedule_tasks(self):
         pyglet.clock.schedule_interval(self.update, 1.0 / 60)
         pyglet.clock.schedule_interval(self.addSeaMonster, 5)
         pyglet.clock.schedule_interval(self.addJungleMonster, 5)
-
         pyglet.clock.schedule_interval(self.shoot_monsters, 2)
 
+    def unschedule_tasks(self):
+        pyglet.clock.unschedule(self.update)
+        pyglet.clock.unschedule(self.addSeaMonster)
+        pyglet.clock.unschedule(self.addJungleMonster)
+        pyglet.clock.unschedule(self.shoot_monsters)
+            
     def shoot_monsters(self, dt=0):
         monster = None
         for el in self.elements:
@@ -102,13 +117,11 @@ class GameWindow(pyglet.window.Window):
     def update(self, dt):
         for element in self.elements:
             element.update(dt)
-
         # Updating the element in grids
         self.grid.update_elements(self.elements)
         self.foam.update(dt)
 
     def on_draw(self):
-        self.background.draw()
         self.grid.draw_background()
 
 
@@ -118,17 +131,23 @@ class GameWindow(pyglet.window.Window):
         
         self.grid.draw_foreground()
         self.foam.draw()
+        self.forest.draw()
 
         # Title
         t_x = self.width - 20
         t_y = self.height - 10
-        header_text = "Rubies: {} - Shark Leather: {}".format(self.ruby, self.shark_leather)
+        header_text = "Score: {} - Rubies: {} - Bear Pelt {} - Shark Teeth: {}".format(self.score, self.ruby,
+                       self.bear_pelt, self.shark_teeth)
         header = pyglet.text.Label(text=header_text, font_name="Ubuntu", bold=False, font_size=16,
                                        x=t_x, y=t_y, anchor_x='right', anchor_y='top')
         header.draw()
 
         if self.crafting_on:
             self.screen_craft.draw()
+
+        if self.paused:
+            self.paused_over.draw()
+            self.paused_txt.draw()
 
 
     def on_mouse_motion(self, x, y, dx, dy): 
@@ -140,23 +159,21 @@ class GameWindow(pyglet.window.Window):
         self.character.angle = atan2(y - c_y, x - c_x)
 
 
-    def on_mouse_press(self, x, y, button, modifiers):
+
+    def on_mouse_press(self, x, y, button, modifiers): 
         if self.crafting_on:
             if button == pyglet.window.mouse.LEFT:
                 print "ok" #self.screen_craft.get_sub_craft(x,y)
             print "hola"
         else:
-            if button == pyglet.window.mouse.LEFT:
-                neighboors = self.grid.neighbours(self.character)
-                for el in neighboors:
-                    if isinstance(el, Monster):
-                        # TODO : Change this by switching the state to attacking
-                        self.character.attack(el)
-                        return
+            if button == pyglet.window.mouse.LEFT and not isinstance(self.character.state, Dying) and not isinstance(self.character.state, Attacking):
+                self.character.state = Attacking(self.character)
             elif button == pyglet.window.mouse.RIGHT:
                 cell = self.grid.grid[y/config.CELL_SIZE][x/config.CELL_SIZE]
                 if cell.element and cell.element in self.grid.neighbours(self.character):
                     cell.element.interact(self.character)
+
+            #wait release
 
     def on_mouse_release(self, x, y, button, modifiers):
         pass
@@ -179,17 +196,16 @@ class GameWindow(pyglet.window.Window):
         elif symbol == pyglet.window.key.LEFT:
             offset = radians(180)
             self.character.state=Moving(self.character, offset)
-        elif symbol == pyglet.window.key.P:
-            pyglet.clock.unschedule(self.update)
-            pyglet.clock.unschedule(self.addSeaMonster)
-            pyglet.clock.unschedule(self.addJungleMonster)
-        elif symbol == pyglet.window.key.G:
-            pyglet.clock.schedule_interval(self.update, 1.0 / 60)
-            pyglet.clock.schedule_interval(self.addSeaMonster, 5)
-            pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+
+        elif symbol == pyglet.window.key.P and not self.paused:
+            self.unschedule_tasks()
+            self.paused = True
+        elif symbol == pyglet.window.key.P and self.paused:
+            self.schedule_tasks()
+            self.paused = False
         elif symbol == pyglet.window.key.Q:
             self.leave_crafting()
-
+    
 
     def on_key_release(self, symbol, modifiers):
         movement_keys = {pyglet.window.key.UP, pyglet.window.key.DOWN, pyglet.window.key.RIGHT, pyglet.window.key.LEFT} 
@@ -198,9 +214,7 @@ class GameWindow(pyglet.window.Window):
             self.character.state = Idle(self.character)
 
     def launch_crafting(self):
-        pyglet.clock.unschedule(self.update)
-        pyglet.clock.unschedule(self.addSeaMonster)
-        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+        self.unschedule_tasks()
 
         self.crafting_on = True
         #self.screen_craft.inventory.subList.append()
@@ -208,9 +222,8 @@ class GameWindow(pyglet.window.Window):
 
     def leave_crafting(self):
         self.crafting_on = False
-        pyglet.clock.schedule_interval(self.update, 1.0 / 60)
-        pyglet.clock.schedule_interval(self.addSeaMonster, 5)
-        pyglet.clock.schedule_interval(self.addJungleMonster, 5)
+        
+        self.schedule_tasks()
 
 
 
