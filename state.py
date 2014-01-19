@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from math import cos, sin, ceil, pi
-import elements
+
 class State(object):
 	"""docstring for State"""
 	anim_delay = 0.1
